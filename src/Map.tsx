@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import ReactDOM from "react-dom";
 import MapOverlay from "./MapOverlay";
 import { rejects } from "assert";
+import { FaCheck, FaQuestionCircle } from "react-icons/fa";
 
 const center = {
   lat: 59.95,
@@ -22,6 +23,13 @@ const newGoogle = (type: string, ...options: any) => {
 
 const apiKey = "AIzaSyA8NjQqq03V3wwueUV_EV6nfGwUF5YAfAY";
 
+type Attendee = {
+  val: string;
+  params: {
+    PARTSTAT: string;
+  };
+};
+
 type Event = {
   start: string;
   end: string;
@@ -29,6 +37,7 @@ type Event = {
   summary: string;
   type: string;
   position?: { lat: number; lng: number };
+  attendee: Attendee[];
 };
 const events = Object.values(json) as Event[];
 
@@ -49,10 +58,10 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
         onMouseLeave={() => {
           setShowing(false);
         }}
+        className="border-sky-500 border-l-4 border-dashed"
         style={{
           display: "flex",
           order: format(new Date(event.start), "yyyyMMdd"),
-          borderLeft: "4px solid blue",
           marginLeft: "30px",
           alignItems: "center",
           padding: "10px",
@@ -62,9 +71,8 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
       >
         <div>
           <div
+            className={`${isShowing ? "bg-rose-500" : "bg-sky-500"} relative`}
             style={{
-              background: "blue",
-              position: "relative",
               left: "-24px",
               height: "25px",
               width: "25px",
@@ -77,6 +85,21 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
           <div>
             {format(new Date(event.start), "MMM do")} -{" "}
             {format(new Date(event.end), "MMM do")}
+          </div>
+          <div>
+            {event.attendee &&
+              event.attendee.map(({ val, params }) => (
+                <div className="flex text-sm text-slate-900">
+                  <div className="flex items-center justify-center w-6">
+                    {params.PARTSTAT === "ACCEPTED" ? (
+                      <FaCheck style={{ color: "green" }} />
+                    ) : (
+                      <FaQuestionCircle style={{ color: "orange" }} />
+                    )}
+                  </div>
+                  <div>{val.split(":")[1]}</div>
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -98,12 +121,11 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
             }}
           >
             <div
-              style={{
-                backgroundColor: isShowing ? "red" : "blue",
-                height: isShowing ? "15px" : "10px",
-                width: isShowing ? "15px" : "10px",
-                borderRadius: "10px",
-              }}
+              className={`${
+                isShowing
+                  ? "bg-rose-500 w-[15px] h-[15px]"
+                  : "bg-sky-500 w-[10px] h-[10px]"
+              } rounded-xl`}
             ></div>
           </div>
         </div>
@@ -186,7 +208,7 @@ export default function Map() {
 
   return (
     <div style={{ display: "flex" }}>
-      <div style={{ display: "flex", flexDirection: "column", width: "40%" }}>
+      <div className="flex flex-col w-2/5 min-w-[400px] h-screen overflow-y-auto">
         {eventData &&
           eventData.map((event) => (
             <Component key={JSON.stringify(event)} event={event} map={map} />
