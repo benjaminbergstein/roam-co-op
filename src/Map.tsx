@@ -1,10 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import json from "./data.json";
 import { format } from "date-fns";
-import ReactDOM from "react-dom";
 import MapOverlay from "./MapOverlay";
-import { rejects } from "assert";
-import { FaCheck, FaQuestionCircle } from "react-icons/fa";
+import { FaCheck, FaQuestionCircle, FaSpinner } from "react-icons/fa";
 
 const center = {
   lat: 59.95,
@@ -41,6 +39,70 @@ type Event = {
 };
 const events = Object.values(json) as Event[];
 
+const queryString = (params: Record<string, string | number>) => {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    searchParams.append(k, v.toString());
+  });
+  return searchParams.toString();
+};
+
+const hipcampLink = (event: Event) =>
+  event.position &&
+  `https://www.hipcamp.com/en-US/search/group-2?${queryString({
+    arrive: format(new Date(event.start), "yyyy-MM-dd"),
+    depart: format(new Date(event.end), "yyyy-MM-dd"),
+    adults: 2,
+    pets: 1,
+    children: 0,
+    q: event.location,
+    ...event.position,
+  })}`;
+
+const airbnbLink = (event: Event) =>
+  event.position &&
+  `https://www.airbnb.com/s/homes?${queryString({
+    query: event.location,
+    checkin: format(new Date(event.start), "yyyy-MM-dd"),
+    checkout: format(new Date(event.end), "yyyy-MM-dd"),
+    pets: 1,
+    adults: 2,
+  })}`;
+
+const bookingLink = (event: Event) =>
+  event.position &&
+  `https://www.booking.com/searchresults.html?${queryString({
+    label:
+      "gog235jc-1DCAEYrwIoggI46AdIM1gDaLECiAEBmAExuAEHyAEM2AED6AEB-AECiAIBqAIDuALCmY6TBsACAdICJGVlNTVjOGE1LTlmYTQtNDVmOC04ZWU3LTlkMzJkZmM1NDczOdgCBOACAQ",
+    sid: "5fcc60e704516457350ee8e8f7cbfba8",
+    aid: 397594,
+    sb_lp: 1,
+    src: "index",
+    ss: event.location,
+    ssne: event.location,
+    ssne_untouched: event.location,
+    checkin_year: format(new Date(event.start), "yyyy"),
+    checkin_month: format(new Date(event.start), "MM"),
+    checkin_monthday: format(new Date(event.start), "d"),
+    checkout_year: format(new Date(event.end), "yyyy"),
+    checkout_month: format(new Date(event.end), "MM"),
+    checkout_monthday: format(new Date(event.end), "d"),
+    group_adults: 5,
+    group_children: 0,
+  })}`;
+
+const vrboLink = (event: Event) =>
+  event.position &&
+  `https://www.vrbo.com/search/keywords:${event.location
+    .replace(/\s/g, "-")
+    .replace(/[^a-zA-Z\-]/g, "")}/arrival:${format(
+    new Date(event.start),
+    "yyyy-MM-dd"
+  )}/departure:${format(
+    new Date(event.end),
+    "yyyy-MM-dd"
+  )}/filter:27?adultsCount=2&petIncluded=true`;
+
 const Component = ({ map, event }: { map: any; event: Event }) => {
   const [isShowing, setShowing] = useState<boolean>(false);
   const matches = event.location?.match(/^[\w ]{1,}, \w{2}/);
@@ -58,26 +120,18 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
         onMouseLeave={() => {
           setShowing(false);
         }}
-        className="border-sky-500 border-l-4 border-dashed"
+        className={`flex bg-white ${
+          isShowing ? "z-50 border-rose-500" : "z-0 border-sky-500"
+        } relative border-l-4 border-dashed ml-7 p-2.5 cursor-pointer`}
         style={{
-          display: "flex",
           order: format(new Date(event.start), "yyyyMMdd"),
-          marginLeft: "30px",
-          alignItems: "center",
-          padding: "10px",
-          cursor: "pointer",
-          background: isShowing ? "#efefef" : "transparent",
         }}
       >
         <div>
           <div
-            className={`${isShowing ? "bg-rose-500" : "bg-sky-500"} relative`}
-            style={{
-              left: "-24px",
-              height: "25px",
-              width: "25px",
-              borderRadius: "25px",
-            }}
+            className={`${
+              isShowing ? "bg-rose-500" : "bg-sky-500"
+            } relative -left-[32px] h-5 w-5 rounded-full`}
           ></div>
         </div>
         <div>
@@ -101,6 +155,38 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
                 </div>
               ))}
           </div>
+          {isShowing && (
+            <div className="absolute border-dashed border-l-4 border-b-4 border-rose-500 rounded-b-lg p-2 -left-[4px] top-full bg-white flex gap-2 items-center shadow-xl w-full">
+              <div className="text-sm">Book on:</div>
+              <div>
+                <a
+                  className="text-sky-600 text-sm"
+                  href={hipcampLink(event)}
+                  target="_BLANK"
+                >
+                  Hipcamp
+                </a>
+              </div>
+              <div>
+                <a
+                  className="text-sky-600 text-sm"
+                  href={airbnbLink(event)}
+                  target="_BLANK"
+                >
+                  Airbnb
+                </a>
+              </div>
+              <div>
+                <a
+                  className="text-sky-600 text-sm"
+                  href={vrboLink(event)}
+                  target="_BLANK"
+                >
+                  VRBO
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <MapOverlay map={map} position={event.position}>
@@ -174,29 +260,41 @@ export default function Map() {
               res();
               return;
             }
-            setTimeout(() => {
-              geocoderRef.current.geocode(
-                { address: obj.location },
-                (results: any, status: any) => {
-                  if (status !== "OK") {
-                    console.group("Unable to geocode event");
-                    console.log(status);
-                    console.table(obj);
-                    console.groupEnd();
+            let tries = 0;
+            const geocode = () => {
+              setTimeout(() => {
+                geocoderRef.current.geocode(
+                  { address: obj.location },
+                  (results: any, status: any) => {
+                    if (
+                      status !== "OK" &&
+                      (status !== "OVER_QUERY_LIMIT" || tries === 5)
+                    ) {
+                      console.group("Unable to geocode event");
+                      console.log(status);
+                      console.table(obj);
+                      console.groupEnd();
+                      res();
+                      return;
+                    } else if (status === "OVER_QUERY_LIMIT") {
+                      tries = tries + 1;
+                      console.log(tries);
+                      geocode();
+                      return;
+                    }
+                    const location = results[0].geometry.location;
+                    const lat = location.lat();
+                    const lng = location.lng();
+                    obj.position = { lat, lng };
+                    newEventData.push(obj);
+                    bounds.extend({ lat, lng });
+                    map.fitBounds(bounds);
                     res();
-                    return;
                   }
-                  const location = results[0].geometry.location;
-                  const lat = location.lat();
-                  const lng = location.lng();
-                  obj.position = { lat, lng };
-                  newEventData.push(obj);
-                  bounds.extend({ lat, lng });
-                  map.fitBounds(bounds);
-                  res();
-                }
-              );
-            }, idx * 100);
+                );
+              }, idx * 100 + tries * 150);
+            };
+            geocode();
           })
       )
     ).then(() => {
@@ -208,9 +306,15 @@ export default function Map() {
 
   return (
     <div style={{ display: "flex" }}>
-      <div className="flex flex-col w-2/5 min-w-[400px] h-screen overflow-y-auto">
+      <div className="flex flex-col w-2/5 min-w-[400px] h-screen overflow-y-auto pb-12">
+        {!eventData && (
+          <div className="flex justify-center items-center w-full gap-4 p-4">
+            <FaSpinner className="animate-spin" />
+            <div>Loading...</div>
+          </div>
+        )}
         {eventData &&
-          eventData.map((event) => (
+          eventData?.map((event) => (
             <Component key={JSON.stringify(event)} event={event} map={map} />
           ))}
       </div>
