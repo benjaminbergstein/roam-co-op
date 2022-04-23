@@ -36,7 +36,7 @@ type Event = {
   summary: string;
   type: string;
   position?: { lat: number; lng: number };
-  attendee: Attendee[];
+  attendee: Attendee | Attendee[];
 };
 const events = Object.values(json) as Event[];
 
@@ -150,7 +150,10 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
           </div>
           <div>
             {event.attendee &&
-              event.attendee.map(({ val, params }) => (
+              (Array.isArray(event.attendee)
+                ? event.attendee
+                : [event.attendee]
+              ).map(({ val, params }) => (
                 <div className="flex text-sm text-slate-900">
                   <div className="flex items-center justify-center w-6">
                     {params.PARTSTAT === "ACCEPTED" ? (
