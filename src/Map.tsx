@@ -3,6 +3,7 @@ import json from "./data.json";
 import { format } from "date-fns";
 import MapOverlay from "./MapOverlay";
 import { FaCheck, FaQuestionCircle, FaSpinner } from "react-icons/fa";
+import { latLng } from "leaflet";
 
 const center = {
   lat: 59.95,
@@ -105,15 +106,22 @@ const vrboLink = (event: Event) =>
 
 const Component = ({ map, event }: { map: any; event: Event }) => {
   const [isShowing, setShowing] = useState<boolean>(false);
+  const divRef = useRef<HTMLDivElement>(null);
   const matches = event.location?.match(/^[\w ]{1,}, \w{2}/);
   const city = matches && matches.length > 0 ? matches[0] : "";
 
+  useEffect(() => {
+    if (!isShowing) return;
+    if (!divRef.current) return;
+    divRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [isShowing]);
   if (event.type !== "VEVENT") return null;
   if (!event.position) return null;
 
   return (
     <>
       <div
+        ref={divRef}
         onMouseEnter={() => {
           setShowing(true);
         }}
@@ -220,6 +228,42 @@ const Component = ({ map, event }: { map: any; event: Event }) => {
   );
 };
 
+const cache = async function <T extends object>(
+  key: string,
+  fetch: () => Promise<T>
+): Promise<T> {
+  const cacheKey = `roamCoop::${cache}::${key}`;
+  const cached = localStorage.getItem(cacheKey);
+  console.log({ cached });
+  if (cached) return JSON.parse(cached) as T;
+  const newValue = await fetch();
+  console.log({ newValue });
+  localStorage.setItem(cacheKey, JSON.stringify(newValue));
+  return newValue;
+};
+
+type GeocoderResult = { lat: Number; lng: number };
+
+const geocode = async (
+  geocoder: any,
+  location: string
+): Promise<GeocoderResult> => {
+  const fetch = (): Promise<GeocoderResult> =>
+    new Promise<GeocoderResult>((res, rej) => {
+      geocoder.geocode({ address: location }, (results: any, status: any) => {
+        if (status !== "OK") {
+          rej(status);
+          return;
+        }
+        const location = results[0].geometry.location;
+        const lat = location.lat();
+        const lng = location.lng();
+        res({ lat, lng });
+      });
+    });
+  return cache<GeocoderResult>(`geocoder::${location}`, fetch);
+};
+
 export default function Map() {
   const scriptRef = useRef<HTMLScriptElement | null>(null);
   const geocoderRef = useRef<any | null>(null);
@@ -261,40 +305,40 @@ export default function Map() {
               return;
             }
             let tries = 0;
-            const geocode = () => {
-              setTimeout(() => {
-                geocoderRef.current.geocode(
-                  { address: obj.location },
-                  (results: any, status: any) => {
-                    if (
-                      status !== "OK" &&
-                      (status !== "OVER_QUERY_LIMIT" || tries === 5)
-                    ) {
-                      console.group("Unable to geocode event");
-                      console.log(status);
+            const geocodeObj = () => {
+              setTimeout(async () => {
+                try {
+                  const coordinate = await geocode(
+                    geocoderRef.current,
+                    obj.location
+                  );
+                  obj.position = coordinate;
+                  newEventData.push(obj);
+                  bounds.extend(coordinate);
+                  map.fitBounds(bounds);
+                  res();
+                } catch (e: any) {
+                  console.log({ e });
+                  if (e === "OVER_QUERY_LIMIT") {
+                    if (tries === 5) {
+                      console.group(`Unable to geocode event: ${e}`);
                       console.table(obj);
                       console.groupEnd();
                       res();
-                      return;
-                    } else if (status === "OVER_QUERY_LIMIT") {
+                    } else {
                       tries = tries + 1;
                       console.log(tries);
-                      geocode();
-                      return;
+                      geocodeObj();
                     }
-                    const location = results[0].geometry.location;
-                    const lat = location.lat();
-                    const lng = location.lng();
-                    obj.position = { lat, lng };
-                    newEventData.push(obj);
-                    bounds.extend({ lat, lng });
-                    map.fitBounds(bounds);
+                  } else {
+                    console.error(e);
                     res();
                   }
-                );
-              }, idx * 100 + tries * 150);
+                  return;
+                }
+              }, tries * 150);
             };
-            geocode();
+            geocodeObj();
           })
       )
     ).then(() => {
