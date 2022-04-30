@@ -18,3 +18,10 @@ export type Event = {
 };
 
 export type Coordinate = { lat: number; lng: number };
+
+export type EventStateType = "past" | "ongoing" | "future";
+
+export type ColorConfig = Record<
+  "border" | "borderHover" | "bg" | "bgHover",
+  string
+>;
