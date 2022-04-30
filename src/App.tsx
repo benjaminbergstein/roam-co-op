@@ -8,7 +8,7 @@ const zoom = 8;
 function App() {
   return (
     <GoogleProvider {...{ center, zoom }}>
-      <div style={{ height: "200px" }}>
+      <div>
         <Map />
       </div>
     </GoogleProvider>
