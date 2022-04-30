@@ -1,11 +1,17 @@
 import Map from "./Map";
 import "./App.css";
+import { GoogleProvider } from "./useGoogle";
+
+const center = { lat: -34.397, lng: 150.644 };
+const zoom = 8;
 
 function App() {
   return (
-    <div style={{ height: "200px" }}>
-      <Map />
-    </div>
+    <GoogleProvider {...{ center, zoom }}>
+      <div style={{ height: "200px" }}>
+        <Map />
+      </div>
+    </GoogleProvider>
   );
 }
 
