@@ -1,35 +1,237 @@
 {
-  "54v1c1e046fqm2kpbebll17391@google.com": {
+  "77cih4epoqll97q5lvkpbosno1@google.com": {
     "type": "VEVENT",
     "params": [],
-    "start": "2022-05-31T06:00:00.000Z",
+    "start": "2022-04-21T06:00:00.000Z",
     "datetype": "date",
-    "end": "2022-06-11T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "end": "2022-04-25T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "uid": "77cih4epoqll97q5lvkpbosno1@google.com",
+    "created": "2022-04-28T19:27:08.000Z",
+    "description": "",
+    "lastmodified": "2022-04-28T19:27:08.000Z",
+    "location": "O‘ahu, Hawaii, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Mary - Hawaii",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "1e0f3i34jb7p79pggtrsaj80fs@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-04-04T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-05-26T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "organizer": {
       "params": {
         "CN": "ROAM CO-OP"
       },
       "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
     },
-    "uid": "54v1c1e046fqm2kpbebll17391@google.com",
+    "uid": "1e0f3i34jb7p79pggtrsaj80fs@google.com",
     "attendee": {
       "params": {
         "CUTYPE": "INDIVIDUAL",
         "ROLE": "REQ-PARTICIPANT",
         "PARTSTAT": "NEEDS-ACTION",
-        "CN": "jadephare@gmail.com",
+        "CN": "florenm2@miamioh.edu",
         "X-NUM-GUESTS": 0
       },
-      "val": "mailto:jadephare@gmail.com"
+      "val": "mailto:florenm2@miamioh.edu"
     },
-    "created": "2022-04-23T16:21:19.000Z",
+    "created": "2022-04-28T19:24:34.000Z",
     "description": "",
-    "lastmodified": "2022-04-23T16:21:19.000Z",
-    "location": "San Francisco, CA, USA",
+    "lastmodified": "2022-04-28T19:24:34.000Z",
+    "location": "Santa Monica, CA, USA",
     "sequence": "0",
     "status": "CONFIRMED",
-    "summary": "Jade still in SF",
+    "summary": "Mary - Santa Monica",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "38i7cjir0kcusmqk8lr7o5p3oc@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-04-12T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-04-23T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "organizer": {
+      "params": {
+        "CN": "ROAM CO-OP"
+      },
+      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
+    },
+    "uid": "38i7cjir0kcusmqk8lr7o5p3oc@google.com",
+    "attendee": [
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "jadephare@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:jadephare@gmail.com"
+      },
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "bennyjbergstein@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:bennyjbergstein@gmail.com"
+      }
+    ],
+    "created": "2022-04-16T04:52:44.000Z",
+    "description": "",
+    "lastmodified": "2022-04-26T22:53:53.000Z",
+    "location": "Salt Lake City, UT, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Salt Lake City",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "562rirmbiobju9q7ooec2s1972@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-04-22T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-04-25T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "organizer": {
+      "params": {
+        "CN": "ROAM CO-OP"
+      },
+      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
+    },
+    "uid": "562rirmbiobju9q7ooec2s1972@google.com",
+    "attendee": [
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "jadephare@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:jadephare@gmail.com"
+      },
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "bennyjbergstein@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:bennyjbergstein@gmail.com"
+      }
+    ],
+    "created": "2022-04-16T04:53:04.000Z",
+    "description": "",
+    "lastmodified": "2022-04-26T22:53:51.000Z",
+    "location": "Fruita, CO 81521, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Fruita, CO",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "2h3an1624p00joq286kjihuobg@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-04-29T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-05-07T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "organizer": {
+      "params": {
+        "CN": "ROAM CO-OP"
+      },
+      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
+    },
+    "uid": "2h3an1624p00joq286kjihuobg@google.com",
+    "attendee": [
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "jadephare@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:jadephare@gmail.com"
+      },
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "bennyjbergstein@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:bennyjbergstein@gmail.com"
+      }
+    ],
+    "created": "2022-04-16T04:53:58.000Z",
+    "description": "",
+    "lastmodified": "2022-04-26T22:53:48.000Z",
+    "location": "Breckenridge, CO 80424, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Breckenridge, CO",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "5vbl9ljpqfgn112db9rlhl5o42@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-04-24T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-04-30T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "organizer": {
+      "params": {
+        "CN": "ROAM CO-OP"
+      },
+      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
+    },
+    "uid": "5vbl9ljpqfgn112db9rlhl5o42@google.com",
+    "attendee": [
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "jadephare@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:jadephare@gmail.com"
+      },
+      {
+        "params": {
+          "CUTYPE": "INDIVIDUAL",
+          "ROLE": "REQ-PARTICIPANT",
+          "PARTSTAT": "ACCEPTED",
+          "CN": "bennyjbergstein@gmail.com",
+          "X-NUM-GUESTS": 0
+        },
+        "val": "mailto:bennyjbergstein@gmail.com"
+      }
+    ],
+    "created": "2022-04-16T04:53:16.000Z",
+    "description": "",
+    "lastmodified": "2022-04-26T22:53:44.000Z",
+    "location": "Meeker, CO 81641, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Meeker, CO",
     "transparency": "TRANSPARENT",
     "method": "PUBLISH"
   },
@@ -39,7 +241,7 @@
     "start": "2022-05-22T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-06-01T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "organizer": {
       "params": {
         "CN": "ROAM CO-OP"
@@ -62,7 +264,7 @@
         "params": {
           "CUTYPE": "INDIVIDUAL",
           "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "NEEDS-ACTION",
+          "PARTSTAT": "ACCEPTED",
           "CN": "jadephare@gmail.com",
           "X-NUM-GUESTS": 0
         },
@@ -71,11 +273,79 @@
     ],
     "created": "2022-04-23T16:20:25.000Z",
     "description": "",
-    "lastmodified": "2022-04-23T16:20:46.000Z",
+    "lastmodified": "2022-04-24T17:37:01.000Z",
     "location": "San Francisco, CA, USA",
     "sequence": "0",
     "status": "CONFIRMED",
     "summary": "Ben in SF",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "54v1c1e046fqm2kpbebll17391@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-05-31T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-06-11T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "organizer": {
+      "params": {
+        "CN": "ROAM CO-OP"
+      },
+      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
+    },
+    "uid": "54v1c1e046fqm2kpbebll17391@google.com",
+    "attendee": {
+      "params": {
+        "CUTYPE": "INDIVIDUAL",
+        "ROLE": "REQ-PARTICIPANT",
+        "PARTSTAT": "ACCEPTED",
+        "CN": "jadephare@gmail.com",
+        "X-NUM-GUESTS": 0
+      },
+      "val": "mailto:jadephare@gmail.com"
+    },
+    "created": "2022-04-23T16:21:19.000Z",
+    "description": "",
+    "lastmodified": "2022-04-24T17:36:57.000Z",
+    "location": "San Francisco, CA, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Jade still in SF",
+    "transparency": "TRANSPARENT",
+    "method": "PUBLISH"
+  },
+  "0pdhuh43cskrbnvin3bfqpnfh0@google.com": {
+    "type": "VEVENT",
+    "params": [],
+    "start": "2022-05-31T06:00:00.000Z",
+    "datetype": "date",
+    "end": "2022-06-10T06:00:00.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
+    "organizer": {
+      "params": {
+        "CN": "ROAM CO-OP"
+      },
+      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
+    },
+    "uid": "0pdhuh43cskrbnvin3bfqpnfh0@google.com",
+    "attendee": {
+      "params": {
+        "CUTYPE": "INDIVIDUAL",
+        "ROLE": "REQ-PARTICIPANT",
+        "PARTSTAT": "NEEDS-ACTION",
+        "CN": "bennyjbergstein@gmail.com",
+        "X-NUM-GUESTS": 0
+      },
+      "val": "mailto:bennyjbergstein@gmail.com"
+    },
+    "created": "2022-04-23T16:46:35.000Z",
+    "description": "",
+    "lastmodified": "2022-04-23T16:46:35.000Z",
+    "location": "Carbondale, CO 81623, USA",
+    "sequence": "0",
+    "status": "CONFIRMED",
+    "summary": "Ben in Colorado with Shasta",
     "transparency": "TRANSPARENT",
     "method": "PUBLISH"
   },
@@ -85,7 +355,7 @@
     "start": "2022-08-28T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-09-06T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "organizer": {
       "params": {
         "CN": "ROAM CO-OP"
@@ -119,7 +389,7 @@
     "start": "2022-08-20T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-08-21T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "organizer": {
       "params": {
         "CN": "ROAM CO-OP"
@@ -153,7 +423,7 @@
     "start": "2022-06-09T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-06-10T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "7l1dr2ulj89jjjoqeohki46trp@google.com",
     "created": "2022-04-18T03:17:53.000Z",
     "description": "",
@@ -171,7 +441,7 @@
     "start": "2022-09-04T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-09-11T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "0lkr61ptjrjlod5a9r1joq15l4@google.com",
     "created": "2022-04-18T03:42:57.000Z",
     "description": "",
@@ -189,7 +459,7 @@
     "start": "2022-09-30T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-11-01T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "2rrg28cv76bfl67tq18n5ribkv@google.com",
     "created": "2022-04-18T03:43:50.000Z",
     "description": "",
@@ -207,7 +477,7 @@
     "start": "2022-08-01T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-08-27T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "7bc212rhfm15tiqn6bfvvgevuc@google.com",
     "created": "2022-04-18T03:30:51.000Z",
     "description": "",
@@ -225,7 +495,7 @@
     "start": "2022-07-11T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-08-02T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "3fv3ttoj7ukr2eq1alo7rlgpgi@google.com",
     "created": "2022-04-18T03:30:24.000Z",
     "description": "",
@@ -243,7 +513,7 @@
     "start": "2022-07-01T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-07-12T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "4s4cfgdqeedl9nbu70t4voj0v9@google.com",
     "created": "2022-04-18T03:30:13.000Z",
     "description": "",
@@ -261,7 +531,7 @@
     "start": "2022-06-10T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-06-16T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "4nd7sta74nopp8siogao86c93o@google.com",
     "created": "2022-04-18T03:17:28.000Z",
     "description": "",
@@ -279,7 +549,7 @@
     "start": "2022-06-12T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-06-13T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "4imkkkj2r08idmtju3e6thl3dl@google.com",
     "created": "2022-04-17T05:31:01.000Z",
     "description": "",
@@ -297,7 +567,7 @@
     "start": "2022-06-05T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-06-06T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "uid": "7dd62i3l0ipmvii9ant9qvipde@google.com",
     "created": "2022-04-17T05:30:49.000Z",
     "description": "",
@@ -315,7 +585,7 @@
     "start": "2022-05-15T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-05-23T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "organizer": {
       "params": {
         "CN": "ROAM CO-OP"
@@ -361,7 +631,7 @@
     "start": "2022-05-06T06:00:00.000Z",
     "datetype": "date",
     "end": "2022-05-16T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
+    "dtstamp": "2022-04-30T23:58:26.000Z",
     "organizer": {
       "params": {
         "CN": "ROAM CO-OP"
@@ -398,190 +668,6 @@
     "sequence": "0",
     "status": "CONFIRMED",
     "summary": "Denver, CO",
-    "transparency": "TRANSPARENT",
-    "method": "PUBLISH"
-  },
-  "5vbl9ljpqfgn112db9rlhl5o42@google.com": {
-    "type": "VEVENT",
-    "params": [],
-    "start": "2022-04-24T06:00:00.000Z",
-    "datetype": "date",
-    "end": "2022-04-30T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
-    "organizer": {
-      "params": {
-        "CN": "ROAM CO-OP"
-      },
-      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
-    },
-    "uid": "5vbl9ljpqfgn112db9rlhl5o42@google.com",
-    "attendee": [
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "ACCEPTED",
-          "CN": "jadephare@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:jadephare@gmail.com"
-      },
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "NEEDS-ACTION",
-          "CN": "bennyjbergstein@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:bennyjbergstein@gmail.com"
-      }
-    ],
-    "created": "2022-04-16T04:53:16.000Z",
-    "description": "",
-    "lastmodified": "2022-04-17T05:29:59.000Z",
-    "location": "Meeker, CO 81641, USA",
-    "sequence": "0",
-    "status": "CONFIRMED",
-    "summary": "Meeker, CO",
-    "transparency": "TRANSPARENT",
-    "method": "PUBLISH"
-  },
-  "2h3an1624p00joq286kjihuobg@google.com": {
-    "type": "VEVENT",
-    "params": [],
-    "start": "2022-04-29T06:00:00.000Z",
-    "datetype": "date",
-    "end": "2022-05-07T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
-    "organizer": {
-      "params": {
-        "CN": "ROAM CO-OP"
-      },
-      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
-    },
-    "uid": "2h3an1624p00joq286kjihuobg@google.com",
-    "attendee": [
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "ACCEPTED",
-          "CN": "jadephare@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:jadephare@gmail.com"
-      },
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "NEEDS-ACTION",
-          "CN": "bennyjbergstein@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:bennyjbergstein@gmail.com"
-      }
-    ],
-    "created": "2022-04-16T04:53:58.000Z",
-    "description": "",
-    "lastmodified": "2022-04-17T05:29:53.000Z",
-    "location": "Breckenridge, CO 80424, USA",
-    "sequence": "0",
-    "status": "CONFIRMED",
-    "summary": "Breckenridge, CO",
-    "transparency": "TRANSPARENT",
-    "method": "PUBLISH"
-  },
-  "562rirmbiobju9q7ooec2s1972@google.com": {
-    "type": "VEVENT",
-    "params": [],
-    "start": "2022-04-22T06:00:00.000Z",
-    "datetype": "date",
-    "end": "2022-04-25T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
-    "organizer": {
-      "params": {
-        "CN": "ROAM CO-OP"
-      },
-      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
-    },
-    "uid": "562rirmbiobju9q7ooec2s1972@google.com",
-    "attendee": [
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "ACCEPTED",
-          "CN": "jadephare@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:jadephare@gmail.com"
-      },
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "NEEDS-ACTION",
-          "CN": "bennyjbergstein@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:bennyjbergstein@gmail.com"
-      }
-    ],
-    "created": "2022-04-16T04:53:04.000Z",
-    "description": "",
-    "lastmodified": "2022-04-17T05:29:46.000Z",
-    "location": "Fruita, CO 81521, USA",
-    "sequence": "0",
-    "status": "CONFIRMED",
-    "summary": "Fruita, CO",
-    "transparency": "TRANSPARENT",
-    "method": "PUBLISH"
-  },
-  "38i7cjir0kcusmqk8lr7o5p3oc@google.com": {
-    "type": "VEVENT",
-    "params": [],
-    "start": "2022-04-12T06:00:00.000Z",
-    "datetype": "date",
-    "end": "2022-04-23T06:00:00.000Z",
-    "dtstamp": "2022-04-23T16:37:38.000Z",
-    "organizer": {
-      "params": {
-        "CN": "ROAM CO-OP"
-      },
-      "val": "mailto:uorgac10bjdg7h591uoe63mkfc@group.calendar.google.com"
-    },
-    "uid": "38i7cjir0kcusmqk8lr7o5p3oc@google.com",
-    "attendee": [
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "ACCEPTED",
-          "CN": "jadephare@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:jadephare@gmail.com"
-      },
-      {
-        "params": {
-          "CUTYPE": "INDIVIDUAL",
-          "ROLE": "REQ-PARTICIPANT",
-          "PARTSTAT": "NEEDS-ACTION",
-          "CN": "bennyjbergstein@gmail.com",
-          "X-NUM-GUESTS": 0
-        },
-        "val": "mailto:bennyjbergstein@gmail.com"
-      }
-    ],
-    "created": "2022-04-16T04:52:44.000Z",
-    "description": "",
-    "lastmodified": "2022-04-17T05:29:39.000Z",
-    "location": "Salt Lake City, UT, USA",
-    "sequence": "0",
-    "status": "CONFIRMED",
-    "summary": "Salt Lake City",
     "transparency": "TRANSPARENT",
     "method": "PUBLISH"
   },

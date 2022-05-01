@@ -71,7 +71,12 @@ const EventCard: FC<Props> = ({ map, event }) => {
           ),
         }}
       >
-        <DayCircle isShowing={isShowing} config={config} start={event.start} />
+        <DayCircle
+          state={state}
+          isShowing={isShowing}
+          config={config}
+          start={event.start}
+        />
         <div>
           <div className="text-sm font-semibold">{event.summary}</div>
           {isShowing && (
