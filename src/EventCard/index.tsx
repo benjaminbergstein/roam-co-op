@@ -14,9 +14,9 @@ type Props = {
 const colorConfig: Record<EventStateType, ColorConfig> = {
   past: {
     border: "border-stone-500",
-    borderHover: "border-stone-900",
+    borderHover: "border-stone-500",
     bg: "bg-stone-500",
-    bgHover: "bg-stone-900",
+    bgHover: "bg-stone-500",
   },
   ongoing: {
     border: "border-amber-700",
