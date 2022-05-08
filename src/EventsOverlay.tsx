@@ -4,11 +4,15 @@ import useGoogle from "./useGoogle";
 import { FaSpinner } from "react-icons/fa";
 import EventCard from "./EventCard";
 import { format } from "date-fns";
+import useCurrentUser from "./useCurrentUser";
 
 const EventsOverlay = () => {
   const { map } = useGoogle();
   const { events, months } = useCalendarEvents();
   const boundsRef = useRef<google.maps.LatLngBounds | null>(null);
+
+  const { isValidating, data: me } = useCurrentUser();
+  const isDev = window.location.hostname === "localhost";
 
   useEffect(() => {
     if (!map) return;
@@ -20,7 +24,16 @@ const EventsOverlay = () => {
       <div className="absolute bottom-0 left-0">
         <div className="absolute flex w-full bottom-0 left-[2vw] w-[95vw] md:w-[40vw] md:max-w-[500px] md:h-[95vh] h-[50vh] py-5">
           <div className="flex-1 bg-white flex flex-col overflow-y-auto rounded-md px-2 shadow-lg">
-            {!events && (
+            {!me && !isValidating && (
+              <a
+                href={`${isDev ? "http://localhost:8788" : ""}/oauth/redirect`}
+              >
+                <button className="rounded-md border border-rose-500 text-rose-500 py-1 px-2">
+                  Log in
+                </button>
+              </a>
+            )}
+            {!events && isValidating && (
               <div className="flex justify-center items-center w-full gap-4 p-4">
                 <FaSpinner className="animate-spin" />
                 <div>Loading...</div>

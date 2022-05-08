@@ -7,7 +7,7 @@
   },
   "compilerOptions": {
     "target": "esnext",
-    "types": ["ical", "google.maps"],
+    "types": ["ical", "google.maps", "@cloudflare/workers-types"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,

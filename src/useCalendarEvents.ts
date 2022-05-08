@@ -4,9 +4,11 @@ import { Event, GoogleType } from "./types";
 import useGoogle from "./useGoogle";
 import geocode from "./geocode";
 import { min, max, eachMonthOfInterval } from "date-fns";
+import useCurrentUser from "./useCurrentUser";
 
 type UseCalendarEventsReturn = {
   events?: Event[];
+  error?: boolean;
   months?: Array<Date>;
 };
 
@@ -26,21 +28,29 @@ const getMonths = (data?: Event[]): Array<Date> | undefined => {
 };
 
 const fetcher = async (
-  googlePromise: Promise<GoogleType>
+  googlePromise: Promise<GoogleType>,
+  token: string
 ): Promise<Event[]> => {
-  const res = await fetch("/roam-coop");
-  const json = await res.json();
+  const res = await fetch("/roam-coop", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const json = (await res.json()) as Event[] & { error?: string };
 
-  return Promise.resolve(json);
+  if (json.error) throw json.error;
+  return Promise.resolve(json as Event[]);
 };
 
 const useCalendarEvents = (): UseCalendarEventsReturn => {
+  const { data: user } = useCurrentUser();
+  const email = user?.email;
+  const token = user?.token;
   const { google, googlePromise, map } = useGoogle();
-  const { data } = useSWR<Event[]>("eventData", async () =>
-    fetcher(googlePromise)
+  const { error, data } = useSWR<Event[]>(
+    email ? `${email}:eventData` : null,
+    async () => fetcher(googlePromise, token!)
   );
-
-  const months = getMonths(data);
 
   useEffect(() => {
     if (!(google && map && data)) return;
@@ -56,6 +66,11 @@ const useCalendarEvents = (): UseCalendarEventsReturn => {
       );
     });
   }, [google, map]);
+
+  console.log(error);
+  if (error) return { events: undefined, error: true };
+
+  const months = getMonths(data);
 
   return {
     events: data,

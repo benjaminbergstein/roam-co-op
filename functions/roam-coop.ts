@@ -1,5 +1,6 @@
 import * as ICAL from "ical.js";
 import fetch from "isomorphic-unfetch";
+import { authorize } from "../lib/utils";
 
 const icalUrl =
   "https://calendar.google.com/calendar/ical/uorgac10bjdg7h591uoe63mkfc%40group.calendar.google.com/private-7fdf12cc6357da7816dc153b6e91f6e8/basic.ics";
@@ -33,6 +34,17 @@ const fetchData = async () => {
 };
 
 export async function onRequest(context) {
-  const data = await fetchData();
-  return new Response(JSON.stringify(data));
+  try {
+    await authorize(context);
+    const data = await fetchData();
+    return new Response(JSON.stringify(data));
+  } catch (e) {
+    if (e === "Unauthorized") {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    } else {
+      throw e;
+    }
+  }
 }

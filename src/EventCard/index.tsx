@@ -45,6 +45,9 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
       const google = await googlePromise;
       const geocoder = new google.maps.Geocoder();
       return await geocode(geocoder, event.location);
+    },
+    {
+      errorRetryInterval: 1000,
     }
   );
 
