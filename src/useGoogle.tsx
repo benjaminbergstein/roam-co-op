@@ -11,12 +11,15 @@ import {
 import { Coordinate, GoogleType } from "./types";
 
 const googlePromise: Promise<GoogleType> = new Promise((res, rej) => {
+  console.log("loading google");
   const timeoutAt = +new Date() + 30000;
   const checkForGoogle = () => {
     setTimeout(() => {
       const now = +new Date();
+      console.log("waiting for google");
 
       if (typeof window.google !== "undefined") {
+        console.log(google);
         res(google);
       } else if (now > timeoutAt) {
         rej("timed out after 30 seconds waiting for google to load");
@@ -24,9 +27,8 @@ const googlePromise: Promise<GoogleType> = new Promise((res, rej) => {
         checkForGoogle();
       }
     }, 300);
-
-    checkForGoogle();
   };
+  checkForGoogle();
 });
 
 const GoogleContext = createContext<UseGoogleReturnType | undefined>(undefined);
@@ -37,6 +39,7 @@ type UseGoogleReturnType = {
   error: string | false;
   map: google.maps.Map | undefined;
   mapRef: MutableRefObject<HTMLDivElement | null>;
+  googlePromise: Promise<GoogleType>;
 };
 
 type UseGoogleHookArgsType = {
@@ -96,6 +99,7 @@ export const GoogleProvider: FC<PropsWithChildren<UseGoogleHookArgsType>> = ({
     google,
     map,
     mapRef,
+    googlePromise,
     error,
   };
 

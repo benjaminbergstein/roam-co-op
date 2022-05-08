@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import useCalendarEvents from "./useCalendarEvents";
 import useGoogle from "./useGoogle";
 import { FaSpinner } from "react-icons/fa";
@@ -8,6 +8,12 @@ import { format } from "date-fns";
 const EventsOverlay = () => {
   const { map } = useGoogle();
   const { events, months } = useCalendarEvents();
+  const boundsRef = useRef<google.maps.LatLngBounds | null>(null);
+
+  useEffect(() => {
+    if (!map) return;
+    boundsRef.current = new google.maps.LatLngBounds();
+  }, [map]);
 
   return (
     <div className="fixed bottom-0 left-0 z-50 h-0">
@@ -37,7 +43,7 @@ const EventsOverlay = () => {
                 <EventCard
                   key={JSON.stringify(event)}
                   event={event}
-                  map={map}
+                  boundsRef={boundsRef}
                 />
               ))}
           </div>

@@ -1,12 +1,13 @@
 {
-   "ts-node": {
-     "files": true,
-     "compilerOptions": {
-       "module": "commonjs"
-     }
-   },
+  "ts-node": {
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
+    "types": ["ical", "google.maps"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
