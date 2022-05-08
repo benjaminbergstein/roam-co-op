@@ -4,9 +4,14 @@ const SCOPES = [
   "https://www.googleapis.com/auth/photoslibrary.readonly",
 ];
 
-export async function onRequest(context) {
+type Env = {
+  GOOGLE_CLIENT_ID: string;
+  API_HOST?: string;
+};
+
+export const onRequest: PagesFunction<Env> = async (context) => {
   const {
-    env: { GOOGLE_CLIENT_ID, API_HOST, CF_PAGES_URL },
+    env: { GOOGLE_CLIENT_ID, API_HOST },
   } = context;
   const redirectUri = new URL(API_HOST || context.request.url);
   redirectUri.pathname = "/oauth/callback";
@@ -20,4 +25,4 @@ export async function onRequest(context) {
   url.searchParams.append("prompt", "consent select_account");
 
   return Response.redirect(url.toString());
-}
+};

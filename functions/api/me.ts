@@ -1,6 +1,10 @@
 import { authorize } from "../../lib/utils";
 
-export async function onRequestPost(context) {
+type Env = {
+  ROAM_CO_OP: RoamCoopNamespaceType;
+};
+
+export const onRequest: PagesFunction<Env> = async (context) => {
   try {
     const { token } = await authorize(context);
     const email = token.email;
@@ -12,4 +16,4 @@ export async function onRequestPost(context) {
     }
     throw e;
   }
-}
+};
