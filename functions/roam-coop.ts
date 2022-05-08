@@ -1,6 +1,6 @@
 import { parse, ICALEventType, ICALFieldType } from "ical.js";
 import fetch from "isomorphic-unfetch";
-import { authorize } from "../lib/utils";
+import { authorize, log } from "../lib/utils";
 
 const icalUrl =
   "https://calendar.google.com/calendar/ical/uorgac10bjdg7h591uoe63mkfc%40group.calendar.google.com/private-7fdf12cc6357da7816dc153b6e91f6e8/basic.ics";

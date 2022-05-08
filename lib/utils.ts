@@ -8,12 +8,6 @@ export const authorize = async (
   const shareId = context.request.headers.get("share-id");
 
   try {
-    if (shareId) {
-      const doc = await ROAM_CO_OP.get(`shares:${shareId}`);
-      const share = JSON.parse(doc!);
-      return { type: "share", share };
-    }
-
     if (header) {
       const [_type, rawToken] = header.split(" ");
       const token = jwtDecode<TokenType>(rawToken);
@@ -21,6 +15,12 @@ export const authorize = async (
       const data = await ROAM_CO_OP.get(`tokens:${email}`);
       const oauth_response = data ? JSON.parse(data) : undefined;
       return { type: "user", token, oauth_response };
+    }
+
+    if (shareId) {
+      const doc = await ROAM_CO_OP.get(`shares:${shareId}`);
+      const share = JSON.parse(doc!);
+      return { type: "share", share };
     }
 
     throw "Unauthorized";

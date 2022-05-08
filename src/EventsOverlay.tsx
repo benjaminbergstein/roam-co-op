@@ -6,13 +6,33 @@ import EventCard from "./EventCard";
 import { format, isPast, isThisMonth } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
 import { RiGoogleFill } from "react-icons/ri";
+import { FaLink } from "react-icons/fa";
+import useSWR from "swr";
 
 const EventsOverlay = () => {
   const { map } = useGoogle();
   const { events, months } = useCalendarEvents();
   const boundsRef = useRef<google.maps.LatLngBounds | null>(null);
 
-  const { authorized, isValidating, data: me } = useCurrentUser();
+  const { api, authorized, isValidating, data: me } = useCurrentUser();
+  const email = me?.email;
+  const { data: shares } = useSWR<Array<ShareType>>(
+    email ? `${email}:shareLinks` : null,
+    async () => api("/api/shares")
+  );
+  const createShareLink = async () => {
+    await api("/api/shares", { method: "POST" });
+  };
+
+  const shareLink = shares && shares[0];
+
+  useEffect(() => {
+    if (!authorized) return;
+    if (!email) return;
+    if (shareLink) return;
+    createShareLink();
+  }, [shareLink]);
+
   const isDev = window.location.hostname === "localhost";
 
   useEffect(() => {
@@ -79,6 +99,17 @@ const EventsOverlay = () => {
                   boundsRef={boundsRef}
                 />
               ))}
+            {shareLink && (
+              <div className="text-xs text-sky-500 order-[99999999]">
+                <a
+                  href={shareLink.url}
+                  className="flex items-center gap-2 mx-1 my-3"
+                >
+                  <FaLink />
+                  Shareable link
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

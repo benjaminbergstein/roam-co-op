@@ -23,17 +23,10 @@ const useCurrentUser = () => {
         res(url.searchParams.get("id") as string);
       })
   );
-  const { data: shareId } = useCache<string>(
-    "shareId",
-    "application",
-    () =>
-      new Promise<string>((res) => {
-        const url = new URL(document.location.href);
-        res(url.searchParams.get("s") as string);
-      })
-  );
+  const url = new URL(document.location.href);
+  const shareId = url.searchParams.get("s") as string;
 
-  async function api<T extends object>(path: string, options: RequestInit) {
+  async function api<T extends object>(path: string, options?: RequestInit) {
     const res = await fetch(path, {
       ...options,
       headers: {
