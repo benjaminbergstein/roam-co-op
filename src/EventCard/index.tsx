@@ -1,14 +1,17 @@
-import { useRef, useEffect, useState, FC } from "react";
+import { useRef, useEffect, useState, FC, MutableRefObject } from "react";
 import { format, isBefore } from "date-fns";
 import MapOverlay from "../MapOverlay";
-import { ColorConfig, Event, EventStateType } from "../types";
+import { ColorConfig, Coordinate, Event, EventStateType } from "../types";
 import * as bookingLinks from "../bookingLinks";
 import { FaCheck, FaQuestionCircle } from "react-icons/fa";
 import DayCircle from "./DayCircle";
+import geocode from "../geocode";
+import useSWR from "swr";
+import useGoogle from "../useGoogle";
 
 type Props = {
-  map: google.maps.Map;
   event: Event;
+  boundsRef: MutableRefObject<google.maps.LatLngBounds | null>;
 };
 
 const colorConfig: Record<EventStateType, ColorConfig> = {
@@ -32,9 +35,30 @@ const colorConfig: Record<EventStateType, ColorConfig> = {
   },
 };
 
-const EventCard: FC<Props> = ({ map, event }) => {
+const EventCard: FC<Props> = ({ event, boundsRef }) => {
   const [isShowing, setShowing] = useState<boolean>(false);
+  const { googlePromise, map } = useGoogle();
   const divRef = useRef<HTMLDivElement>(null);
+  const { data: position } = useSWR<Coordinate>(
+    `coordinate:${event.location}`,
+    async () => {
+      const google = await googlePromise;
+      const geocoder = new google.maps.Geocoder();
+      return await geocode(geocoder, event.location);
+    }
+  );
+
+  const isSmall = window.innerWidth < 400;
+  useEffect(() => {
+    if (!position) return;
+    if (!map) return;
+    if (!boundsRef.current) return;
+    boundsRef.current.extend(position);
+    map.fitBounds(
+      boundsRef.current,
+      isSmall ? { bottom: 300 } : { left: window.innerWidth / 3 }
+    );
+  }, [position]);
 
   const isPast = isBefore(new Date(event.end), new Date());
   const isStarted = isBefore(new Date(event.start), new Date());
@@ -48,8 +72,7 @@ const EventCard: FC<Props> = ({ map, event }) => {
     if (!divRef.current) return;
     divRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [isShowing]);
-  if (event.type !== "VEVENT") return null;
-  if (!event.position) return null;
+  if (!position) return null;
 
   return (
     <>
@@ -141,7 +164,7 @@ const EventCard: FC<Props> = ({ map, event }) => {
           )}
         </div>
       </div>
-      <MapOverlay map={map} position={event.position}>
+      <MapOverlay map={map} position={position}>
         <div
           onMouseEnter={() => setShowing(true)}
           onMouseLeave={() => setShowing(false)}

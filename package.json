@@ -1,5 +1,5 @@
 {
-  "name": "leaflet2",
+  "name": "roam-co-op",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,8 +16,11 @@
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.0"
   },
+  "proxy": "http://localhost:8788",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"yarn start:react\" \"yarn start:functions\"",
+    "start:react": "react-scripts start",
+    "start:functions": "wrangler pages dev functions",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -45,16 +48,20 @@
   "devDependencies": {
     "@types/google-map-react": "^2.1.5",
     "@types/google.maps": "^3.48.7",
+    "@types/ical": "^0.8.0",
     "@types/leaflet": "^1.7.9",
     "autoprefixer": "^10.4.4",
+    "concurrently": "^7.1.0",
     "date-fns": "^2.28.0",
     "google-map-react": "^2.1.10",
+    "ical.js": "^1.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "leaflet": "^1.7.1",
     "node-ical": "^0.15.1",
     "postcss": "^8.4.12",
     "react-icons": "^4.3.1",
     "react-leaflet": "^3.2.5",
+    "swr": "^1.3.0",
     "tailwindcss": "^3.0.24",
     "ts-node": "^10.7.0"
   }
