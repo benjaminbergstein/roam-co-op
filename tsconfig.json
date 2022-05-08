@@ -7,7 +7,7 @@
   },
   "compilerOptions": {
     "target": "esnext",
-    "types": ["ical", "google.maps"],
+    "types": ["ical", "google.maps", "@cloudflare/workers-types"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,6 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -23,5 +24,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src", "functions", "lib"]
 }

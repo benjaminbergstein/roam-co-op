@@ -20,12 +20,15 @@
   "scripts": {
     "start": "concurrently \"yarn start:react\" \"yarn start:functions\"",
     "start:react": "react-scripts start",
-    "start:functions": "wrangler pages dev functions",
+    "start:functions": "sh ./server.sh",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:ci": "yarn data:fetch && yarn build",
-    "data:fetch": "yarn ts-node src/foo.ts"
+    "data:fetch": "yarn ts-node src/foo.ts",
+    "dev:secrets:decrypt": "gpg -d secrets.bash.gpg > secrets.bash",
+    "dev:secrets:encrypt": "gpg -e -r bennyjbergstein+roam@gmail.com secrets.bash > secrets.bash.gpg",
+    "dev:secrets:export-key": "gpg --export-secret-key -a \"bennyjbergstein+roam@gmail.com\" > private.key"
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^3.9.0",
     "@types/google-map-react": "^2.1.5",
     "@types/google.maps": "^3.48.7",
     "@types/ical": "^0.8.0",
@@ -56,6 +60,7 @@
     "google-map-react": "^2.1.10",
     "ical.js": "^1.5.0",
     "isomorphic-unfetch": "^3.1.0",
+    "jwt-decode": "^3.1.2",
     "leaflet": "^1.7.1",
     "node-ical": "^0.15.1",
     "postcss": "^8.4.12",
