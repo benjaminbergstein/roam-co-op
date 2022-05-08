@@ -10,9 +10,10 @@ type TransformFn = (
   acc: Partial<EventType>
 ) => Partial<EventType>;
 
+type AttendeeParamsType = { cn: string };
 type AttendeeType = {
   val: string;
-  params: object;
+  params: AttendeeParamsType;
 };
 
 type EventType = {
@@ -29,7 +30,10 @@ const transforms: Record<ICALFieldType, TransformFn> = {
   dtend: (data) => ({ end: new Date(data[3]) }),
   uid: (data) => ({ uuid: data[3].split("@")[0] }),
   attendee: (data, acc) => ({
-    attendee: [...(acc.attendee || []), { val: data[3], params: data[1] }],
+    attendee: [
+      ...(acc.attendee || []),
+      { val: data[3], params: data[1] as AttendeeParamsType },
+    ],
   }),
   location: (data) => ({ location: data[3] }),
   summary: (data) => ({ summary: data[3] }),
@@ -45,21 +49,24 @@ const transformEvent = (data: ["vevent", ICALEventType[]]): EventType =>
     { raw: data } as Partial<EventType>
   ) as EventType;
 
-const fetchData = async () => {
+const fetchData = async (authorization: Authorization) => {
   const res = await fetch(icalUrl);
   const text = await res.text();
   const events = parse(text);
-  return events[2].map(transformEvent);
+  return events[2].map(transformEvent).filter((event) => {
+    if (authorization.type === "user") return true;
+    if (authorization.type === "share") {
+      return (event.attendee || []).some(
+        (attendee) => attendee.params.cn === authorization.share.email
+      );
+    }
+  });
 };
 
-type Env = {
-  ROAM_CO_OP: RoamCoopNamespaceType;
-};
-
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const onRequest: API = async (context) => {
   try {
-    await authorize(context);
-    const data = await fetchData();
+    const authorization = await authorize(context);
+    const data = await fetchData(authorization);
     return new Response(JSON.stringify(data));
   } catch (e) {
     if (e === "Unauthorized") {

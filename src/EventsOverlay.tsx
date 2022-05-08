@@ -12,7 +12,7 @@ const EventsOverlay = () => {
   const { events, months } = useCalendarEvents();
   const boundsRef = useRef<google.maps.LatLngBounds | null>(null);
 
-  const { isValidating, data: me } = useCurrentUser();
+  const { authorized, isValidating, data: me } = useCurrentUser();
   const isDev = window.location.hostname === "localhost";
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const EventsOverlay = () => {
       <div className="absolute bottom-0 left-0">
         <div className="absolute flex w-full bottom-0 left-[2vw] w-[95vw] md:w-[40vw] md:max-w-[500px] md:h-[95vh] h-[50vh] py-5">
           <div className="flex-1 bg-white flex flex-col overflow-y-auto rounded-md px-2 shadow-lg">
-            {!me && !isValidating && (
+            {!authorized && !isValidating && (
               <div className="h-full flex justify-center flex-col px-2">
                 <div className="flex flex-col gap-1 lg:gap-2">
                   <h1 className="text-2xl text-zinc-800 my-1 lg:my-3">

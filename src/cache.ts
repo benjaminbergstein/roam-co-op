@@ -3,16 +3,18 @@ import logger from "./logger";
 
 export function useCache<T extends object | string>(
   key: string,
+  cacheName: string,
   fetch: () => Promise<T>
 ) {
-  return useSWR<T>(key, async () => cache<T>(key, fetch));
+  return useSWR<T>(key, async () => cache<T>(key, cacheName, fetch));
 }
 
 const cache = async function <T extends object | string>(
   key: string,
+  cacheName: string,
   fetch: () => Promise<T>
 ): Promise<T> {
-  const cacheKey = `roamCoop::${cache}::${key}`;
+  const cacheKey = `roamCoop::${cacheName}::${key}`;
   logger.debug(`Cache "${key}"`);
   const cached = localStorage.getItem(cacheKey);
   if (!!cached) {
