@@ -25,7 +25,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:ci": "yarn data:fetch && yarn build",
-    "data:fetch": "yarn ts-node src/foo.ts"
+    "data:fetch": "yarn ts-node src/foo.ts",
+    "dev:secrets:decrypt": "gpg -d secrets.bash.gpg > secrets.bash",
+    "dev:secrets:encrypt": "gpg -e -r bennyjbergstein+roam@gmail.com secrets.bash > secrets.bash.gpg",
+    "dev:secrets:export-key": "gpg --export-secret-key -a \"bennyjbergstein+roam@gmail.com\" > private.key"
   },
   "eslintConfig": {
     "extends": [
