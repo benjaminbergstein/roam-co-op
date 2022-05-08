@@ -31,7 +31,7 @@ const EventsOverlay = () => {
     if (!email) return;
     if (shareLink) return;
     createShareLink();
-  }, [shareLink]);
+  }, [authorized, email, shareLink]);
 
   const isDev = window.location.hostname === "localhost";
 
