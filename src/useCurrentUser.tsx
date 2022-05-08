@@ -7,29 +7,59 @@ export type User = {
   token: string;
 };
 
+type CurrentUserReturn = User & {
+  api: ApiClient;
+  shareId?: string;
+  authorized: boolean;
+};
+
 const useCurrentUser = () => {
   const { data: id } = useCache<string>(
     "id",
+    "application",
     () =>
       new Promise<string>((res) => {
         const url = new URL(document.location.href);
-        logger.debug(url);
-        logger.debug(url.searchParams.get("id"));
         res(url.searchParams.get("id") as string);
       })
   );
-  logger.debug("useCurrentUser");
-  logger.debug(`⎣ id:`, id);
-  return useSWR<User>(id ? "me" : null, async () => {
-    const res = await fetch("/api/me", {
-      method: "POST",
+  const { data: shareId } = useCache<string>(
+    "shareId",
+    "application",
+    () =>
+      new Promise<string>((res) => {
+        const url = new URL(document.location.href);
+        res(url.searchParams.get("s") as string);
+      })
+  );
+
+  async function api<T extends object>(path: string, options: RequestInit) {
+    const res = await fetch(path, {
+      ...options,
       headers: {
-        Authorization: `Bearer ${id}`,
+        ...(id && { Authorization: `Bearer ${id}` }),
+        ...(shareId && { "Share-Id": shareId }),
       },
     });
-    const user = (await res.json()) as Omit<User, "id">;
-    return { ...user, token: id } as User;
-  });
+    return res.json() as T;
+  }
+
+  window.apiClient = api;
+
+  logger.debug("useCurrentUser");
+  logger.debug(`⎢ shareId: `, shareId);
+  logger.debug(`⎣ id:`, id);
+  return {
+    ...useSWR<CurrentUserReturn>(id ? "me" : null, async () => {
+      const user = await api<Omit<User, "id">>("/api/me", {
+        method: "POST",
+      });
+      return { ...user, token: id } as CurrentUserReturn;
+    }),
+    authorized: shareId || id,
+    shareId,
+    api,
+  };
 };
 
 export default useCurrentUser;
