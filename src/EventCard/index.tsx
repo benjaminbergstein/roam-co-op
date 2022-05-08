@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, FC, MutableRefObject } from "react";
 import { format, isBefore } from "date-fns";
 import MapOverlay from "../MapOverlay";
-import { ColorConfig, Coordinate, Event, EventStateType } from "../types";
+import { ColorConfig, EventStateType } from "../types";
 import * as bookingLinks from "../bookingLinks";
 import { FaCheck, FaQuestionCircle } from "react-icons/fa";
 import DayCircle from "./DayCircle";
@@ -10,7 +10,7 @@ import useSWR from "swr";
 import useGoogle from "../useGoogle";
 
 type Props = {
-  event: Event;
+  event: EventType;
   boundsRef: MutableRefObject<google.maps.LatLngBounds | null>;
 };
 
@@ -101,7 +101,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
           state={state}
           isShowing={isShowing}
           config={config}
-          start={event.start}
+          start={event.start as string}
         />
         <div>
           <div className="text-sm font-semibold">{event.summary}</div>
@@ -121,7 +121,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                   ).map(({ val, params }) => (
                     <div className="flex text-xs text-slate-900">
                       <div className="flex items-center justify-center w-6">
-                        {params.PARTSTAT === "ACCEPTED" ? (
+                        {params.partstat === "ACCEPTED" ? (
                           <FaCheck style={{ color: "green" }} />
                         ) : (
                           <FaQuestionCircle style={{ color: "orange" }} />

@@ -1,17 +1,16 @@
 import { useEffect } from "react";
 import useSWR from "swr";
-import { Event, GoogleType } from "./types";
 import useGoogle from "./useGoogle";
 import { min, max, eachMonthOfInterval } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
 
 type UseCalendarEventsReturn = {
-  events?: Event[];
+  events?: EventType[];
   error?: boolean;
   months?: Array<Date>;
 };
 
-const getMonths = (data?: Event[]): Array<Date> | undefined => {
+const getMonths = (data?: EventType[]): Array<Date> | undefined => {
   if (!data) return undefined;
 
   const [minDate, maxDate] = data.reduce<[Date, Date]>((acc, e) => {
@@ -26,20 +25,20 @@ const getMonths = (data?: Event[]): Array<Date> | undefined => {
   return eachMonthOfInterval({ start: minDate, end: maxDate });
 };
 
-type EventsResponse = Event[] & { error?: string };
+type EventsResponse = EventType[] & { error?: string };
 
 const useCalendarEvents = (): UseCalendarEventsReturn => {
   const { api, shareId, data: user } = useCurrentUser();
   const email = user?.email;
   const { google, map } = useGoogle();
-  const { error, data } = useSWR<Event[]>(
+  const { error, data } = useSWR<EventType[]>(
     email || shareId ? `${[email, shareId].join("|")}:eventData` : null,
     async () => {
       if (!api) throw "error";
       const json = await api<EventsResponse>("/roam-coop", {});
 
       if (json.error) throw json.error;
-      return json as Event[];
+      return json as EventType[];
     }
   );
 

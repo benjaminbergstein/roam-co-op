@@ -1,4 +1,3 @@
-import { Coordinate } from "./types";
 import cache from "./cache";
 
 const geocode = async (

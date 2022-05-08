@@ -67,3 +67,21 @@ type Authorization =
       oauth_response: OauthResponseType;
       share?: never;
     };
+
+type AttendeeParamsType = { cn: string; partstat: "ACCEPTED" | "NEEDS-ACTION" };
+type AttendeeType = {
+  val: string;
+  params: AttendeeParamsType;
+};
+
+type EventType = {
+  start: Date | string;
+  end: Date | string;
+  uuid: string;
+  attendee: AttendeeType[];
+  location: string;
+  position?: Coordinate;
+  summary: string;
+};
+
+type Coordinate = { lat: number; lng: number };

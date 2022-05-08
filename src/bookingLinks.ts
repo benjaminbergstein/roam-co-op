@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { Event } from "./types";
 
 export const queryString = (params: Record<string, string | number>) => {
   const searchParams = new URLSearchParams();
@@ -9,7 +8,7 @@ export const queryString = (params: Record<string, string | number>) => {
   return searchParams.toString();
 };
 
-export const hipcamp = (event: Event) =>
+export const hipcamp = (event: EventType) =>
   event.position &&
   `https://www.hipcamp.com/en-US/search/group-2?${queryString({
     arrive: format(new Date(event.start), "yyyy-MM-dd"),
@@ -21,7 +20,7 @@ export const hipcamp = (event: Event) =>
     ...event.position,
   })}`;
 
-export const airbnb = (event: Event) =>
+export const airbnb = (event: EventType) =>
   event.position &&
   `https://www.airbnb.com/s/homes?${queryString({
     query: event.location,
@@ -31,7 +30,7 @@ export const airbnb = (event: Event) =>
     adults: 2,
   })}`;
 
-export const booking = (event: Event) =>
+export const booking = (event: EventType) =>
   event.position &&
   `https://www.booking.com/searchresults.html?${queryString({
     label:
@@ -53,7 +52,7 @@ export const booking = (event: Event) =>
     group_children: 0,
   })}`;
 
-export const vrbo = (event: Event) =>
+export const vrbo = (event: EventType) =>
   event.position &&
   `https://www.vrbo.com/search/keywords:${event.location
     .replace(/\s/g, "-")

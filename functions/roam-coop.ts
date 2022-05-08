@@ -10,21 +10,6 @@ type TransformFn = (
   acc: Partial<EventType>
 ) => Partial<EventType>;
 
-type AttendeeParamsType = { cn: string };
-type AttendeeType = {
-  val: string;
-  params: AttendeeParamsType;
-};
-
-type EventType = {
-  start: Date;
-  end: Date;
-  uuid: string;
-  attendee: AttendeeType[];
-  location: string;
-  summary: string;
-};
-
 const transforms: Record<ICALFieldType, TransformFn> = {
   dtstart: (data) => ({ start: new Date(data[3]) }),
   dtend: (data) => ({ end: new Date(data[3]) }),
@@ -57,7 +42,9 @@ const fetchData = async (authorization: Authorization) => {
     if (authorization.type === "user") return true;
     if (authorization.type === "share") {
       return (event.attendee || []).some(
-        (attendee) => attendee.params.cn === authorization.share.email
+        (attendee) =>
+          attendee.params.cn === authorization.share.email &&
+          attendee.params.partstat === "ACCEPTED"
       );
     }
   });
