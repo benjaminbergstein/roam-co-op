@@ -8,20 +8,25 @@ import {
   useContext,
   PropsWithChildren,
 } from "react";
+import logger from "./logger";
 import { Coordinate, GoogleType } from "./types";
 
 const googlePromise: Promise<GoogleType> = new Promise((res, rej) => {
-  console.log("loading google");
+  logger.debug("Load Google");
+  logger.debug(`⎣ START`);
   const timeoutAt = +new Date() + 30000;
   const checkForGoogle = () => {
     setTimeout(() => {
       const now = +new Date();
-      console.log("waiting for google");
-
+      logger.debug("Load Google");
+      logger.debug(`⎣ ↻ CHECKING`);
       if (typeof window.google !== "undefined") {
-        console.log(google);
+        logger.debug("Load Google");
+        logger.debug(`⎣ ✅ LOADED`);
         res(google);
       } else if (now > timeoutAt) {
+        logger.debug("Load Google");
+        logger.debug(`⎣ ⚠ TIMED OUT️`);
         rej("timed out after 30 seconds waiting for google to load");
       } else {
         checkForGoogle();
