@@ -1,6 +1,6 @@
 import { parse, ICALEventType, ICALFieldType } from "ical.js";
 import fetch from "isomorphic-unfetch";
-import { authorize } from "../lib/utils";
+import { authorize, log } from "../lib/utils";
 
 const icalUrl =
   "https://calendar.google.com/calendar/ical/uorgac10bjdg7h591uoe63mkfc%40group.calendar.google.com/private-7fdf12cc6357da7816dc153b6e91f6e8/basic.ics";
@@ -10,26 +10,15 @@ type TransformFn = (
   acc: Partial<EventType>
 ) => Partial<EventType>;
 
-type AttendeeType = {
-  val: string;
-  params: object;
-};
-
-type EventType = {
-  start: Date;
-  end: Date;
-  uuid: string;
-  attendee: AttendeeType[];
-  location: string;
-  summary: string;
-};
-
 const transforms: Record<ICALFieldType, TransformFn> = {
   dtstart: (data) => ({ start: new Date(data[3]) }),
   dtend: (data) => ({ end: new Date(data[3]) }),
   uid: (data) => ({ uuid: data[3].split("@")[0] }),
   attendee: (data, acc) => ({
-    attendee: [...(acc.attendee || []), { val: data[3], params: data[1] }],
+    attendee: [
+      ...(acc.attendee || []),
+      { val: data[3], params: data[1] as AttendeeParamsType },
+    ],
   }),
   location: (data) => ({ location: data[3] }),
   summary: (data) => ({ summary: data[3] }),
@@ -45,21 +34,26 @@ const transformEvent = (data: ["vevent", ICALEventType[]]): EventType =>
     { raw: data } as Partial<EventType>
   ) as EventType;
 
-const fetchData = async () => {
+const fetchData = async (authorization: Authorization) => {
   const res = await fetch(icalUrl);
   const text = await res.text();
   const events = parse(text);
-  return events[2].map(transformEvent);
+  return events[2].map(transformEvent).filter((event) => {
+    if (authorization.type === "user") return true;
+    if (authorization.type === "share") {
+      return (event.attendee || []).some(
+        (attendee) =>
+          attendee.params.cn === authorization.share.email &&
+          attendee.params.partstat === "ACCEPTED"
+      );
+    }
+  });
 };
 
-type Env = {
-  ROAM_CO_OP: RoamCoopNamespaceType;
-};
-
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const onRequest: API = async (context) => {
   try {
-    await authorize(context);
-    const data = await fetchData();
+    const authorization = await authorize(context);
+    const data = await fetchData(authorization);
     return new Response(JSON.stringify(data));
   } catch (e) {
     if (e === "Unauthorized") {

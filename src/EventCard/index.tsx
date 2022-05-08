@@ -1,17 +1,32 @@
 import { useRef, useEffect, useState, FC, MutableRefObject } from "react";
 import { format, isBefore } from "date-fns";
 import MapOverlay from "../MapOverlay";
-import { ColorConfig, Coordinate, Event, EventStateType } from "../types";
+import { ColorConfig, EventStateType } from "../types";
 import * as bookingLinks from "../bookingLinks";
-import { FaCheck, FaQuestionCircle } from "react-icons/fa";
+import {
+  FaMapMarker,
+  FaCalendar,
+  FaCheck,
+  FaQuestionCircle,
+} from "react-icons/fa";
 import DayCircle from "./DayCircle";
 import geocode from "../geocode";
 import useSWR from "swr";
 import useGoogle from "../useGoogle";
 
 type Props = {
-  event: Event;
+  event: EventType;
   boundsRef: MutableRefObject<google.maps.LatLngBounds | null>;
+};
+
+const Users = {
+  bennyjbergstein: "Ben",
+  jadephare: "Jade",
+  florenm2: "Mary",
+};
+const name = (val: string): string => {
+  const key = val.split(":")[1].split("@")[0] as keyof typeof Users;
+  return Users[key];
 };
 
 const colorConfig: Record<EventStateType, ColorConfig> = {
@@ -101,15 +116,24 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
           state={state}
           isShowing={isShowing}
           config={config}
-          start={event.start}
+          start={event.start as string}
         />
         <div>
           <div className="text-sm font-semibold">{event.summary}</div>
           {isShowing && (
             <div
-              className={`absolute border-dashed border-l-4 border-b-4 ${config.borderHover} rounded-b-lg p-2 -left-[4px] top-full bg-white flex flex-col gap-2 shadow-xl w-full`}
+              className={`absolute border-dashed border-l-4 border-b-4 ${config.borderHover} rounded-b-lg p-2 px-3 -left-[4px] top-full bg-white flex flex-col shadow-xl w-full`}
             >
-              <div className="text-xs">
+              <div className="text-xs flex items-center border-t border-stone-100 py-3 px-1">
+                <div className="w-5">
+                  <FaMapMarker />
+                </div>
+                {event.location}
+              </div>
+              <div className="text-xs flex items-center border-t border-stone-100 py-3 px-1">
+                <div className="w-5">
+                  <FaCalendar />
+                </div>
                 {format(new Date(event.start), "MMM do")} -{" "}
                 {format(new Date(event.end), "MMM do")}
               </div>
@@ -119,24 +143,26 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                     ? event.attendee
                     : [event.attendee]
                   ).map(({ val, params }) => (
-                    <div className="flex text-xs text-slate-900">
-                      <div className="flex items-center justify-center w-6">
-                        {params.PARTSTAT === "ACCEPTED" ? (
+                    <div className="text-xs flex items-center border-t border-stone-100 py-3 px-1">
+                      <div className="w-5">
+                        {params.partstat === "ACCEPTED" ? (
                           <FaCheck style={{ color: "green" }} />
                         ) : (
                           <FaQuestionCircle style={{ color: "orange" }} />
                         )}
                       </div>
-                      <div>{val.split(":")[1]}</div>
+                      <div>{name(val)}</div>
                     </div>
                   ))}
               </div>
               {(!isStarted || !isPast) && (
-                <>
-                  <div className="text-sm">Book on:</div>
+                <div className="text-[16px] flex items-center w-full gap-2 xl:gap-3 border-t border-stone-100 pt-2">
+                  <div className="tracking-wider shrink-0 uppercase text-stone-700 flex items-center">
+                    Book:
+                  </div>
                   <div>
                     <a
-                      className="text-sky-600 text-sm"
+                      className="text-sky-600"
                       href={bookingLinks.hipcamp(event)}
                       target="_BLANK"
                     >
@@ -145,7 +171,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                   </div>
                   <div>
                     <a
-                      className="text-sky-600 text-sm"
+                      className="text-sky-600"
                       href={bookingLinks.airbnb(event)}
                       target="_BLANK"
                     >
@@ -154,14 +180,14 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                   </div>
                   <div>
                     <a
-                      className="text-sky-600 text-sm"
+                      className="text-sky-600"
                       href={bookingLinks.vrbo(event)}
                       target="_BLANK"
                     >
                       VRBO
                     </a>
                   </div>
-                </>
+                </div>
               )}
             </div>
           )}

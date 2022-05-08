@@ -1,14 +1,6 @@
 import jwt_decode from "jwt-decode";
 
-type Env = {
-  GOOGLE_CLIENT_SECRET: string;
-  GOOGLE_CLIENT_ID: string;
-  API_HOST?: string;
-  ROAM_CO_OP: KVNamespace;
-  APP_HOST?: string;
-};
-
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const onRequest: API = async (context) => {
   const {
     env: {
       GOOGLE_CLIENT_SECRET,
@@ -23,7 +15,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   const baseUrl = API_HOST || inferredUrl;
   const appUrl = APP_HOST || inferredUrl;
   const redirectUri = new URL("/oauth/callback", baseUrl);
-  console.log(redirectUri.toString());
 
   const url = new URL(context.request.url);
   const code = url.searchParams.get("code");

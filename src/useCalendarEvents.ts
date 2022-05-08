@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import useSWR from "swr";
-import { Event, GoogleType } from "./types";
 import useGoogle from "./useGoogle";
-import geocode from "./geocode";
 import { min, max, eachMonthOfInterval } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
 
 type UseCalendarEventsReturn = {
-  events?: Event[];
+  events?: EventType[];
   error?: boolean;
   months?: Array<Date>;
 };
 
-const getMonths = (data?: Event[]): Array<Date> | undefined => {
+const getMonths = (data?: EventType[]): Array<Date> | undefined => {
   if (!data) return undefined;
 
   const [minDate, maxDate] = data.reduce<[Date, Date]>((acc, e) => {
@@ -27,29 +25,21 @@ const getMonths = (data?: Event[]): Array<Date> | undefined => {
   return eachMonthOfInterval({ start: minDate, end: maxDate });
 };
 
-const fetcher = async (
-  googlePromise: Promise<GoogleType>,
-  token: string
-): Promise<Event[]> => {
-  const res = await fetch("/roam-coop", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const json = (await res.json()) as Event[] & { error?: string };
-
-  if (json.error) throw json.error;
-  return Promise.resolve(json as Event[]);
-};
+type EventsResponse = EventType[] & { error?: string };
 
 const useCalendarEvents = (): UseCalendarEventsReturn => {
-  const { data: user } = useCurrentUser();
+  const { api, shareId, data: user } = useCurrentUser();
   const email = user?.email;
-  const token = user?.token;
-  const { google, googlePromise, map } = useGoogle();
-  const { error, data } = useSWR<Event[]>(
-    email ? `${email}:eventData` : null,
-    async () => fetcher(googlePromise, token!)
+  const { google, map } = useGoogle();
+  const { error, data } = useSWR<EventType[]>(
+    email || shareId ? `${[email, shareId].join("|")}:eventData` : null,
+    async () => {
+      if (!api) throw "error";
+      const json = await api<EventsResponse>("/roam-coop", {});
+
+      if (json.error) throw json.error;
+      return json as EventType[];
+    }
   );
 
   useEffect(() => {
@@ -67,7 +57,6 @@ const useCalendarEvents = (): UseCalendarEventsReturn => {
     });
   }, [google, map]);
 
-  console.log(error);
   if (error) return { events: undefined, error: true };
 
   const months = getMonths(data);

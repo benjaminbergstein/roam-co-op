@@ -1,5 +1,3 @@
-import { Coordinate } from "./types";
-import logger from "./logger";
 import cache from "./cache";
 
 const geocode = async (
@@ -23,7 +21,7 @@ const geocode = async (
         res({ lat, lng });
       });
     });
-  return cache<Coordinate>(`geocoder::${location}`, fetch);
+  return cache<Coordinate>(location, "geocoder", fetch);
 };
 
 export default geocode;

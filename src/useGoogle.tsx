@@ -9,7 +9,7 @@ import {
   PropsWithChildren,
 } from "react";
 import logger from "./logger";
-import { Coordinate, GoogleType } from "./types";
+import { GoogleType } from "./types";
 
 const googlePromise: Promise<GoogleType> = new Promise((res, rej) => {
   logger.debug("Load Google");
