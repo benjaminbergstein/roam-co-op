@@ -82,6 +82,8 @@ type EventType = {
   location: string;
   position?: Coordinate;
   summary: string;
+  next?: EventType;
+  prev?: EventType;
 };
 
-type Coordinate = { lat: number; lng: number };
+type Coordinate = google.maps.LatLngLiteral;

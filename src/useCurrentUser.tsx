@@ -39,9 +39,13 @@ const useCurrentUser = () => {
 
   window.apiClient = api;
 
-  logger.debug("useCurrentUser");
-  logger.debug(`⎢ shareId: `, shareId);
-  logger.debug(`⎣ id:`, id);
+  logger.list(
+    "useCurrentUser",
+    `shareId: ${shareId}`,
+    `id: "${
+      id ? id?.substring(0, 6) + "..." + id.substr(id.length - 6, 6) : ""
+    }"`
+  );
   return {
     ...useSWR<CurrentUserReturn>(id ? "me" : null, async () => {
       const user = await api<Omit<User, "id">>("/api/me", {

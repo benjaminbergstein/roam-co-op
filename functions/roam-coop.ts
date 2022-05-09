@@ -38,16 +38,27 @@ const fetchData = async (authorization: Authorization) => {
   const res = await fetch(icalUrl);
   const text = await res.text();
   const events = parse(text);
-  return events[2].map(transformEvent).filter((event) => {
-    if (authorization.type === "user") return true;
-    if (authorization.type === "share") {
-      return (event.attendee || []).some(
-        (attendee) =>
-          attendee.params.cn === authorization.share.email &&
-          attendee.params.partstat === "ACCEPTED"
-      );
-    }
-  });
+  return events[2]
+    .map(transformEvent)
+    .filter((event) => {
+      if (event.location === "") return false;
+      if (authorization.type === "share") {
+        return (event.attendee || []).some(
+          (attendee) =>
+            attendee.params.cn === authorization.share.email &&
+            attendee.params.partstat === "ACCEPTED"
+        );
+      }
+      if (authorization.type === "user") return true;
+    })
+    .sort((a, b) => (a.start < b.start ? -1 : 1))
+    .map((event, idx, arr) => {
+      return {
+        ...event,
+        prev: idx - 1 < 0 ? undefined : arr[idx - 1],
+        next: arr[idx + 1],
+      };
+    });
 };
 
 export const onRequest: API = async (context) => {
