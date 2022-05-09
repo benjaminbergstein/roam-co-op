@@ -1,5 +1,4 @@
 import Map from "./Map";
-import "./App.css";
 import { GoogleProvider } from "./useGoogle";
 const center = { lng: 39.7628, lat: -105.0263 };
 const zoom = 4;
