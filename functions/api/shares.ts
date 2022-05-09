@@ -10,6 +10,7 @@ export const onRequestGet: API = async (context) => {
   const listResponse = await ROAM_CO_OP.list<SharesKeyType>({
     prefix: `shares:${email}`,
   });
+  const { path } = getRoutes(context);
   const shares = toCollection<ShareType>(
     await Promise.all(
       listResponse.keys.map(
@@ -17,7 +18,9 @@ export const onRequestGet: API = async (context) => {
           name,
         }: KVNamespaceListKey<SharesKeyType>): Promise<ShareType> => {
           const doc = (await ROAM_CO_OP.get(name as SharesKeyType)) as string;
-          return JSON.parse(doc);
+          const data = JSON.parse(doc) as ShareType;
+          data.url = path(`/?s=${data.uuid}`).toString();
+          return data;
         }
       )
     )
