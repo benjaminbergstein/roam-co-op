@@ -1,6 +1,6 @@
 import { parse, ICALEventType, ICALFieldType } from "ical.js";
 import fetch from "isomorphic-unfetch";
-import { authorize, log } from "../lib/utils";
+import { cache, authorize } from "../lib/utils";
 
 const icalUrl =
   "https://calendar.google.com/calendar/ical/uorgac10bjdg7h591uoe63mkfc%40group.calendar.google.com/private-7fdf12cc6357da7816dc153b6e91f6e8/basic.ics";
@@ -64,7 +64,12 @@ const fetchData = async (authorization: Authorization) => {
 export const onRequest: API = async (context) => {
   try {
     const authorization = await authorize(context);
-    const data = await fetchData(authorization);
+    const data = await cache(context, "calendar", () =>
+      fetchData(authorization)
+    );
+    data.forEach((datum) => {
+      cache(context, `event:${datum.uuid}`, () => Promise.resolve(datum));
+    });
     return new Response(JSON.stringify(data));
   } catch (e) {
     if (e === "Unauthorized") {
