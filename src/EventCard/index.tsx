@@ -5,7 +5,7 @@ import { format, isBefore } from "date-fns";
 import MapOverlay from "../MapOverlay";
 import { ColorConfig, EventStateType } from "../types";
 import * as bookingLinks from "../bookingLinks";
-import { FaCalendar, FaCheck, FaQuestionCircle } from "react-icons/fa";
+import { FaCheck, FaQuestionCircle } from "react-icons/fa";
 import DayCircle from "./DayCircle";
 import useGoogle from "../useGoogle";
 import useRouter from "../useRouter";
@@ -49,7 +49,7 @@ const colorConfig: Record<EventStateType, ColorConfig> = {
 
 const EventCard: FC<Props> = ({ event, boundsRef }) => {
   const [isHovered, setHovered] = useState<boolean>(false);
-  const { params, push, event: currentEvent } = useRouter();
+  const { params, push, event: currentEvent, onlyMine } = useRouter();
   const isBeforeOrAfter = [
     currentEvent?.prev?.uuid,
     currentEvent?.next?.uuid,
@@ -145,7 +145,10 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
         <button
           ref={divRef}
           onClick={() => {
-            push(`/event/${event.uuid}`);
+            push(
+              `/event/${event.uuid}`,
+              onlyMine ? { mine: "true" } : undefined
+            );
           }}
           className={`${isBeforeOrAfter ? "opacity-80" : ""} flex ${
             isVisible ? "" : "flex-1"
@@ -171,17 +174,15 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
           />
           <div className="w-full">
             <div className="text-sm font-semibold">{event.summary}</div>
-            <div className="text-[16px] text-stone-500">{event.location}</div>
-
+            <div className="text-[16px] text-stone-500">
+              {event.location}
+              {` • ${format(new Date(event.start), "MMM do")} - ${format(
+                new Date(event.end),
+                "MMM do"
+              )}`}
+            </div>
             {isEvent && (
               <div className={`top-full bg-white flex flex-col my-3`}>
-                <div className="text-xs flex items-center border-t border-stone-200 py-3 px-1">
-                  <div className="w-5">
-                    <FaCalendar />
-                  </div>
-                  {format(new Date(event.start), "MMM do")} -{" "}
-                  {format(new Date(event.end), "MMM do")}
-                </div>
                 <div>
                   {event.attendee &&
                     (Array.isArray(event.attendee)
@@ -242,7 +243,12 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
       {(isVisible || !eventId) && (
         <MapOverlay map={map} position={position}>
           <div
-            onClick={() => push(`/event/${event.uuid}`)}
+            onClick={() => {
+              push(
+                `/event/${event.uuid}`,
+                onlyMine ? { mine: "true" } : undefined
+              );
+            }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >

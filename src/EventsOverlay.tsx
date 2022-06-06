@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import useCalendarEvents from "./useCalendarEvents";
 import useGoogle from "./useGoogle";
 import {
   FaArrowLeft,
+  FaCheck,
   FaRemoveFormat,
   FaSpinner,
   FaTimes,
@@ -19,8 +20,10 @@ const EventsOverlay = () => {
   const { map } = useGoogle();
   const { events, months } = useCalendarEvents();
   const boundsRef = useRef<google.maps.LatLngBounds | null>(null);
-  const { params, push } = useRouter();
+  const { params, push, url } = useRouter();
   const { eventId } = params;
+  const onlyMine =
+    new URL(window.location.href).searchParams.get("mine") === "true";
 
   const { api, authorized, isValidating, data: me } = useCurrentUser();
   const email = me?.email;
@@ -47,6 +50,11 @@ const EventsOverlay = () => {
     if (!map) return;
     boundsRef.current = new google.maps.LatLngBounds();
   }, [map]);
+
+  const handleMineClicked = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    push(url.pathname, { mine: onlyMine ? "false" : "true" });
+  };
 
   return (
     <div className="fixed bottom-0 left-0 z-50 h-0">
@@ -119,17 +127,40 @@ const EventsOverlay = () => {
                   />
                 ))}
             </div>
-            {shareLink && (
-              <div className="text-xs text-sky-500 z-50 w-full bg-white">
-                <a
-                  href={shareLink.url}
-                  className="flex items-center gap-2 mx-1 my-3"
-                >
-                  <FaLink />
-                  Shareable link
-                </a>
+            <div className="flex items-center gap-2 justify-between px-2 pt-4">
+              <div className="text-xs text-sky-500 z-50 bg-white">
+                {authorized && !onlyMine && (
+                  <a
+                    onClick={handleMineClicked}
+                    href={`${url.pathname}?mine=true`}
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                  >
+                    Only mine
+                  </a>
+                )}
+                {authorized && onlyMine && (
+                  <a
+                    onClick={handleMineClicked}
+                    href={`${url.pathname}?mine=false`}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2"
+                  >
+                    <FaCheck />
+                    <span>Only mine</span>
+                  </a>
+                )}
               </div>
-            )}
+              {shareLink && (
+                <div className="text-xs text-sky-500 z-50 bg-white">
+                  <a
+                    href={shareLink.url}
+                    className="flex items-center gap-2 mx-1 my-3"
+                  >
+                    <FaLink />
+                    Shareable link
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

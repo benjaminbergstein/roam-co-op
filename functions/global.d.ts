@@ -18,7 +18,8 @@ declare module "ical.js" {
 
 type TokenKeyType = `tokens:${string}`;
 type SharesKeyType = `shares:${string}:${string}` | `shares:${string}`;
-type Keys = TokenKeyType | SharesKeyType;
+type CacheKeyType = `cache:${string}`;
+type Keys = TokenKeyType | SharesKeyType | CacheKeyType;
 type RoamCoopNamespaceType = KVNamespace<Keys>;
 
 interface AppEnv {

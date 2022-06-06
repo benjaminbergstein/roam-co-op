@@ -4,12 +4,13 @@ import logger from "./logger";
 import useCalendarEvents from "./useCalendarEvents";
 import useCurrentUser from "./useCurrentUser";
 
-type PushFn = (newUrl: string) => void;
+type PushFn = (newUrl: string, params?: object) => void;
 
 type RouterType = {
   url: URL;
   push: PushFn;
   params: ParamsType;
+  onlyMine?: boolean;
   event?: EventType;
 };
 
@@ -36,13 +37,12 @@ type ParamsKeyType = "eventId";
 type ParamsType = Partial<Record<ParamsKeyType, string>>;
 
 const useRouter: RouterHookType = () => {
-  const { shareId } = useCurrentUser();
   const { data: rawUrl, mutate } = useSWR<string>(
     "rawUrl",
     async () => window.location.href,
     { fallbackData: window.location.href }
   );
-  const { events } = useCalendarEvents();
+  const { events, onlyMine } = useCalendarEvents();
   const url = new URL(rawUrl || window.location.href);
 
   const params = useMemo(() => {
@@ -89,10 +89,14 @@ const useRouter: RouterHookType = () => {
     };
   }, []);
 
-  const push: PushFn = (path: string) => {
+  const push: PushFn = (path: string, params: object = {}) => {
     if (path[0] === "/") {
       const newUrl = new URL(url.toString());
       newUrl.pathname = path;
+      newUrl.search = "";
+      Object.entries(params).forEach(([k, v]) => {
+        newUrl.searchParams.append(k, v);
+      });
       window.history.pushState({}, "", newUrl);
       mutate(window.location.href);
     } else {
@@ -100,7 +104,7 @@ const useRouter: RouterHookType = () => {
     }
   };
 
-  return { url, push, params, event };
+  return { url, push, params, event, onlyMine };
 };
 
 export default useRouter;

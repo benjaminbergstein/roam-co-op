@@ -1,5 +1,19 @@
 import jwtDecode from "jwt-decode";
 
+export const cache = async <Data extends object = object>(
+  context: AppContext,
+  key: string,
+  calculate: () => Promise<Data>
+): Promise<Data> => {
+  const { ROAM_CO_OP } = context.env;
+  const cachedData = await ROAM_CO_OP.get(`cache:${key}`);
+  if (cachedData) {
+    return JSON.parse(cachedData) as Data;
+  }
+
+  return await calculate();
+};
+
 export const authorize = async (
   context: AppContext
 ): Promise<Authorization> => {
