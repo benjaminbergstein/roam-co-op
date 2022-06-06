@@ -3,10 +3,13 @@ import useSWR from "swr";
 import useGoogle from "./useGoogle";
 import { min, max, eachMonthOfInterval } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
+import useRouter from "./useRouter";
+import logger from "./logger";
 
 type UseCalendarEventsReturn = {
   events?: EventType[];
   error?: boolean;
+  onlyMine?: boolean;
   months?: Array<Date>;
 };
 
@@ -28,14 +31,22 @@ const getMonths = (data?: EventType[]): Array<Date> | undefined => {
 type EventsResponse = EventType[] & { error?: string };
 
 const useCalendarEvents = (): UseCalendarEventsReturn => {
+  const onlyMine =
+    new URL(window.location.href).searchParams.get("mine") === "true";
+  logger.log({ onlyMine });
   const { api, shareId, data: user } = useCurrentUser();
   const email = user?.email;
   const { google, map } = useGoogle();
   const { error, data } = useSWR<EventType[]>(
-    email || shareId ? `${[email, shareId].join("|")}:eventData` : null,
+    email || shareId
+      ? `${[email, shareId, onlyMine ? "all" : "mine"].join("|")}:eventData`
+      : null,
     async () => {
       if (!api) throw "error";
-      const json = await api<EventsResponse>("/roam-coop", {});
+      const json = await api<EventsResponse>(
+        `/roam-coop${onlyMine ? "?mine=true" : ""}`,
+        {}
+      );
 
       if (json.error) throw json.error;
       return json as EventType[];
@@ -64,6 +75,7 @@ const useCalendarEvents = (): UseCalendarEventsReturn => {
   return {
     events: data,
     months,
+    onlyMine,
   };
 };
 

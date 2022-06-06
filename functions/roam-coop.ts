@@ -34,13 +34,20 @@ const transformEvent = (data: ["vevent", ICALEventType[]]): EventType =>
     { raw: data } as Partial<EventType>
   ) as EventType;
 
-const fetchData = async (authorization: Authorization) => {
+const fetchData = async (authorization: Authorization, onlyMine: boolean) => {
   const res = await fetch(icalUrl);
   const text = await res.text();
   const events = parse(text);
+  const currentUserEmail = authorization.token?.email;
+
   return events[2]
     .map(transformEvent)
     .filter((event) => {
+      if (currentUserEmail !== undefined && onlyMine === true)
+        return (event.attendee || []).some(
+          (attendee) => attendee.params.cn === currentUserEmail
+        );
+
       if (event.location === "") return false;
       if (authorization.type === "share") {
         return (event.attendee || []).some(
@@ -63,9 +70,11 @@ const fetchData = async (authorization: Authorization) => {
 
 export const onRequest: API = async (context) => {
   try {
+    const onlyMine =
+      new URL(context.request.url).searchParams.get("mine") === "true";
     const authorization = await authorize(context);
     const data = await cache(context, "calendar", () =>
-      fetchData(authorization)
+      fetchData(authorization, onlyMine)
     );
     data.forEach((datum) => {
       cache(context, `event:${datum.uuid}`, () => Promise.resolve(datum));
