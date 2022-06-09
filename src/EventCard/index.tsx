@@ -116,8 +116,8 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
     );
   }, [isEvent, position]);
 
-  const isPast = isBefore(new Date(event.end), new Date());
-  const isStarted = isBefore(new Date(event.start), new Date());
+  const isPast = isBefore(event.endDate, new Date());
+  const isStarted = isBefore(event.startDate, new Date());
 
   const state = isPast ? "past" : isStarted ? "ongoing" : "future";
   const config = colorConfig[state];
@@ -159,7 +159,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
           } relative border-l-4 border-dashed ml-[15px] py-2 pl-[30px] cursor-pointer`}
           style={{
             order: format(
-              isStarted && !isPast ? new Date() : new Date(event.start),
+              isStarted && !isPast ? new Date() : event.startDate,
               "yyyyMMdd"
             ),
           }}
@@ -176,8 +176,8 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
             <div className="text-sm font-semibold">{event.summary}</div>
             <div className="text-[16px] text-stone-500">
               {event.location}
-              {` • ${format(new Date(event.start), "MMM do")} - ${format(
-                new Date(event.end),
+              {` • ${format(event.startDate, "MMM do")} - ${format(
+                event.endDate,
                 "MMM do"
               )}`}
             </div>
@@ -211,6 +211,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                         className="text-sky-600"
                         href={bookingLinks.hipcamp(event)}
                         target="_BLANK"
+                        rel="noreferrer"
                       >
                         Hipcamp
                       </a>
@@ -220,6 +221,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                         className="text-sky-600"
                         href={bookingLinks.airbnb(event)}
                         target="_BLANK"
+                        rel="noreferrer"
                       >
                         Airbnb
                       </a>
@@ -229,6 +231,7 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                         className="text-sky-600"
                         href={bookingLinks.vrbo(event)}
                         target="_BLANK"
+                        rel="noreferrer"
                       >
                         VRBO
                       </a>

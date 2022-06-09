@@ -11,8 +11,8 @@ export const queryString = (params: Record<string, string | number>) => {
 export const hipcamp = (event: EventType) =>
   event.position &&
   `https://www.hipcamp.com/en-US/search/group-2?${queryString({
-    arrive: format(new Date(event.start), "yyyy-MM-dd"),
-    depart: format(new Date(event.end), "yyyy-MM-dd"),
+    arrive: format(event.startDate, "yyyy-MM-dd"),
+    depart: format(event.endDate, "yyyy-MM-dd"),
     adults: 2,
     pets: 1,
     children: 0,
@@ -24,8 +24,8 @@ export const airbnb = (event: EventType) =>
   event.position &&
   `https://www.airbnb.com/s/homes?${queryString({
     query: event.location,
-    checkin: format(new Date(event.start), "yyyy-MM-dd"),
-    checkout: format(new Date(event.end), "yyyy-MM-dd"),
+    checkin: format(event.startDate, "yyyy-MM-dd"),
+    checkout: format(event.endDate, "yyyy-MM-dd"),
     pets: 1,
     adults: 2,
   })}`;
@@ -42,12 +42,12 @@ export const booking = (event: EventType) =>
     ss: event.location,
     ssne: event.location,
     ssne_untouched: event.location,
-    checkin_year: format(new Date(event.start), "yyyy"),
-    checkin_month: format(new Date(event.start), "MM"),
-    checkin_monthday: format(new Date(event.start), "d"),
-    checkout_year: format(new Date(event.end), "yyyy"),
-    checkout_month: format(new Date(event.end), "MM"),
-    checkout_monthday: format(new Date(event.end), "d"),
+    checkin_year: format(event.startDate, "yyyy"),
+    checkin_month: format(event.startDate, "MM"),
+    checkin_monthday: format(event.startDate, "d"),
+    checkout_year: format(event.endDate, "yyyy"),
+    checkout_month: format(event.endDate, "MM"),
+    checkout_monthday: format(event.endDate, "d"),
     group_adults: 5,
     group_children: 0,
   })}`;
@@ -57,9 +57,9 @@ export const vrbo = (event: EventType) =>
   `https://www.vrbo.com/search/keywords:${event.location
     .replace(/\s/g, "-")
     .replace(/[^a-zA-Z\-]/g, "")}/arrival:${format(
-    new Date(event.start),
+    event.startDate,
     "yyyy-MM-dd"
   )}/departure:${format(
-    new Date(event.end),
+    event.endDate,
     "yyyy-MM-dd"
   )}/filter:27?adultsCount=2&petIncluded=true`;
