@@ -12,8 +12,8 @@ type TransformFn = (
 ) => Partial<EventType>;
 
 const transforms: Record<ICALFieldType, TransformFn> = {
-  dtstart: (data) => ({ start: format(new Date(data[3]), "yyyy-MM-dd") }),
-  dtend: (data) => ({ end: format(new Date(data[3]), "yyyy-MM-dd") }),
+  dtstart: (data) => ({ start: data[3] }),
+  dtend: (data) => ({ end: data[3] }),
   uid: (data) => ({ uuid: data[3].split("@")[0] }),
   attendee: (data, acc) => ({
     attendee: [

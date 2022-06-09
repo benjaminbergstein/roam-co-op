@@ -3,8 +3,6 @@ import useSWR from "swr";
 import useGoogle from "./useGoogle";
 import { min, max, eachMonthOfInterval, addDays } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
-import useRouter from "./useRouter";
-import logger from "./logger";
 
 type UseCalendarEventsReturn = {
   events?: EventType[];
@@ -49,11 +47,23 @@ const useCalendarEvents = (): UseCalendarEventsReturn => {
       return json as EventType[];
     }
   );
-  const events = data?.map((e) => ({
-    ...e,
-    startDate: addDays(new Date(e.start), 2),
-    endDate: addDays(new Date(e.end), 1),
-  }));
+  const events = data?.map((e) => {
+    const startDate = new Date(e.start);
+    const endDate = new Date(e.end);
+    return {
+      ...e,
+      startDate: new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate() + 1
+      ),
+      endDate: new Date(
+        endDate.getFullYear(),
+        endDate.getMonth(),
+        endDate.getDate()
+      ),
+    };
+  });
 
   useEffect(() => {
     if (!(google && map && data)) return;
