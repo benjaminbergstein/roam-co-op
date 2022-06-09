@@ -83,6 +83,8 @@ type EventType = {
   location: string;
   position?: Coordinate;
   summary: string;
+  startDate: Date;
+  endDate: Date;
   next?: EventType;
   prev?: EventType;
 };
