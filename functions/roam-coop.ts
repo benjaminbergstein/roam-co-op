@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { parse, ICALEventType, ICALFieldType } from "ical.js";
 import fetch from "isomorphic-unfetch";
 import { cache, authorize } from "../lib/utils";
@@ -11,8 +12,8 @@ type TransformFn = (
 ) => Partial<EventType>;
 
 const transforms: Record<ICALFieldType, TransformFn> = {
-  dtstart: (data) => ({ start: new Date(data[3]) }),
-  dtend: (data) => ({ end: new Date(data[3]) }),
+  dtstart: (data) => ({ start: data[3] }),
+  dtend: (data) => ({ end: data[3] }),
   uid: (data) => ({ uuid: data[3].split("@")[0] }),
   attendee: (data, acc) => ({
     attendee: [

@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import useSWR from "swr";
 import useGoogle from "./useGoogle";
-import { min, max, eachMonthOfInterval } from "date-fns";
+import { min, max, eachMonthOfInterval, addDays } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
-import useRouter from "./useRouter";
-import logger from "./logger";
 
 type UseCalendarEventsReturn = {
   events?: EventType[];
@@ -17,11 +15,9 @@ const getMonths = (data?: EventType[]): Array<Date> | undefined => {
   if (!data) return undefined;
 
   const [minDate, maxDate] = data.reduce<[Date, Date]>((acc, e) => {
-    const startDate = new Date(e.start);
-    const endDate = new Date(e.end);
     return [
-      min([...acc, startDate, endDate]),
-      max([...acc, startDate, endDate]),
+      min([...acc, e.startDate, e.endDate]),
+      max([...acc, e.startDate, e.endDate]),
     ];
   }, [] as unknown as [Date, Date]) as [Date, Date];
 
@@ -33,7 +29,6 @@ type EventsResponse = EventType[] & { error?: string };
 const useCalendarEvents = (): UseCalendarEventsReturn => {
   const onlyMine =
     new URL(window.location.href).searchParams.get("mine") === "true";
-  logger.log({ onlyMine });
   const { api, shareId, data: user } = useCurrentUser();
   const email = user?.email;
   const { google, map } = useGoogle();
@@ -52,6 +47,23 @@ const useCalendarEvents = (): UseCalendarEventsReturn => {
       return json as EventType[];
     }
   );
+  const events = data?.map((e) => {
+    const startDate = new Date(e.start);
+    const endDate = new Date(e.end);
+    return {
+      ...e,
+      startDate: new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate() + 1
+      ),
+      endDate: new Date(
+        endDate.getFullYear(),
+        endDate.getMonth(),
+        endDate.getDate()
+      ),
+    };
+  });
 
   useEffect(() => {
     if (!(google && map && data)) return;
@@ -70,10 +82,10 @@ const useCalendarEvents = (): UseCalendarEventsReturn => {
 
   if (error) return { events: undefined, error: true };
 
-  const months = getMonths(data);
+  const months = getMonths(events);
 
   return {
-    events: data,
+    events,
     months,
     onlyMine,
   };

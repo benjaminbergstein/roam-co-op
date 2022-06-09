@@ -6,7 +6,7 @@ type Props = {
   isHovered: boolean;
   state: EventStateType;
   config: ColorConfig;
-  start: string;
+  startDate: Date;
   isEvent: boolean;
   isBeforeOrAfter: boolean;
 };
@@ -14,7 +14,7 @@ type Props = {
 const DayCircle: FC<Props> = ({
   state,
   isBeforeOrAfter,
-  start,
+  startDate,
   config,
   isEvent,
 }) => {
@@ -47,7 +47,7 @@ const DayCircle: FC<Props> = ({
           className={`${config.bg} ${"text-white"}
         text-xs ${baseSize} font-semibold rounded-full flex items-center justify-center`}
         >
-          {state !== "ongoing" && format(new Date(start), "d")}
+          {state !== "ongoing" && format(startDate, "d")}
         </div>
       </div>
     </div>
