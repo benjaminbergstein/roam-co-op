@@ -10,6 +10,7 @@ import DayCircle from "./DayCircle";
 import useGoogle from "../useGoogle";
 import useRouter from "../useRouter";
 import useGeocodedCoordinate from "../useGeocodedCoordinate";
+import Photos from "./Photos";
 
 type Props = {
   event: EventType;
@@ -200,6 +201,15 @@ const EventCard: FC<Props> = ({ event, boundsRef }) => {
                         <div>{name(val)}</div>
                       </div>
                     ))}
+                </div>
+                <div className="w-[50vw]">
+                  <p className="text-sm">Photos</p>
+                  <div className="flex overflow-y-auto">
+                    <Photos
+                      startDate={event.startDate}
+                      endDate={event.endDate}
+                    />
+                  </div>
                 </div>
                 {(!isStarted || !isPast) && (
                   <div className="text-[16px] flex items-center w-full gap-2 xl:gap-3 border-t border-stone-200 pt-2">

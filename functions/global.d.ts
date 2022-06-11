@@ -17,9 +17,10 @@ declare module "ical.js" {
 }
 
 type TokenKeyType = `tokens:${string}`;
+type RefreshTokenKeyType = `refresh_tokens:${string}`;
 type SharesKeyType = `shares:${string}:${string}` | `shares:${string}`;
 type CacheKeyType = `cache:${string}`;
-type Keys = TokenKeyType | SharesKeyType | CacheKeyType;
+type Keys = TokenKeyType | RefreshTokenKeyType | SharesKeyType | CacheKeyType;
 type RoamCoopNamespaceType = KVNamespace<Keys>;
 
 interface AppEnv {
@@ -54,20 +55,23 @@ type TokenType = { email: string };
 type OauthResponseType = {
   access_token: string;
   refresh_token: string;
+  expire_at?: number;
 };
 
-type Authorization =
-  | {
-      type: "share";
-      share: ShareType;
-      token?: never;
-    }
-  | {
-      type: "user";
-      token: TokenType;
-      oauth_response: OauthResponseType;
-      share?: never;
-    };
+type ShareAuthorization = {
+  type: "share";
+  share: ShareType;
+  token?: never;
+};
+
+type UserAuthorization = {
+  type: "user";
+  token: TokenType;
+  oauth_response: OauthResponseType;
+  share?: never;
+};
+
+type Authorization = ShareAuthorization | UserAuthorization;
 
 type AttendeeParamsType = { cn: string; partstat: "ACCEPTED" | "NEEDS-ACTION" };
 type AttendeeType = {
@@ -90,3 +94,6 @@ type EventType = {
 };
 
 type Coordinate = google.maps.LatLngLiteral;
+
+type GoogleAuthorizationCodeResponse = { id_token: string; expires_in: number };
+type GoogleRefreshTokenResponse = { access_token: string; expires_in: number };
