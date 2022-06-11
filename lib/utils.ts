@@ -14,11 +14,75 @@ export const cache = async <Data extends object = object>(
   return await calculate();
 };
 
+export const getAccessToken = async (context: AppContext) => {
+  const { token, type, ...res } = await authorize(context);
+  if (!("oauth_response" in res))
+    return new Response(JSON.stringify({ mediaItems: [] }));
+  const expire_at = res.oauth_response.expire_at;
+  const access_token = res.oauth_response?.access_token;
+
+  if (!expire_at || expire_at < +new Date()) {
+    return await refreshAccessToken(context);
+  }
+
+  return access_token;
+};
+
+export const refreshAccessToken = async (context: AppContext) => {
+  const {
+    env: { GOOGLE_CLIENT_SECRET, GOOGLE_CLIENT_ID, ROAM_CO_OP },
+  } = context;
+  const userAuthorization = await getUserAuthorization(context);
+  if (!userAuthorization)
+    throw "Error refreshing token: user authorization not found";
+  const { oauth_response, token } = userAuthorization;
+  const { refresh_token: refreshToken } = oauth_response;
+
+  const body = new FormData();
+  body.append("client_id", GOOGLE_CLIENT_ID);
+  body.append("client_secret", GOOGLE_CLIENT_SECRET);
+  body.append("refresh_token", refreshToken);
+  body.append("grant_type", "refresh_token");
+  const startTime = +new Date();
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    body,
+  });
+
+  const data = await res.json<GoogleRefreshTokenResponse>();
+  const expires_in = data.expires_in;
+  const access_token = data.access_token;
+  const expire_at = startTime + expires_in * 1000;
+  ROAM_CO_OP.put(
+    `tokens:${token.email}`,
+    JSON.stringify({
+      oauth_response: { ...oauth_response, ...data, expire_at },
+    })
+  );
+
+  return access_token;
+};
+
+const getUserAuthorization = async (
+  context: AppContext
+): Promise<UserAuthorization | null> => {
+  const { ROAM_CO_OP } = context.env;
+  const header = context.request.headers.get("authorization");
+
+  if (!header) return null;
+
+  const [_type, rawToken] = header.split(" ");
+  const token = jwtDecode<TokenType>(rawToken);
+  const email = token.email;
+  const data = await ROAM_CO_OP.get(`tokens:${email}`);
+  const oauth_response = data ? JSON.parse(data) : undefined;
+  return { type: "user", token, oauth_response };
+};
+
 export const authorize = async (
   context: AppContext
 ): Promise<Authorization> => {
   const { ROAM_CO_OP } = context.env;
-  const header = context.request.headers.get("authorization");
   const shareId = context.request.headers.get("share-id");
 
   try {
@@ -28,14 +92,8 @@ export const authorize = async (
       return { type: "share", share };
     }
 
-    if (header) {
-      const [_type, rawToken] = header.split(" ");
-      const token = jwtDecode<TokenType>(rawToken);
-      const email = token.email;
-      const data = await ROAM_CO_OP.get(`tokens:${email}`);
-      const oauth_response = data ? JSON.parse(data) : undefined;
-      return { type: "user", token, oauth_response };
-    }
+    const userAuthorization = await getUserAuthorization(context);
+    if (userAuthorization) return userAuthorization;
 
     throw "Unauthorized";
   } catch (e) {

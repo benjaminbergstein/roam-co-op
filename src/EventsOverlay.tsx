@@ -1,13 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import useCalendarEvents from "./useCalendarEvents";
 import useGoogle from "./useGoogle";
-import {
-  FaArrowLeft,
-  FaCheck,
-  FaRemoveFormat,
-  FaSpinner,
-  FaTimes,
-} from "react-icons/fa";
+import { FaCheck, FaSpinner, FaTimes } from "react-icons/fa";
 import EventCard from "./EventCard";
 import { format, isPast, isThisMonth } from "date-fns";
 import useCurrentUser from "./useCurrentUser";
