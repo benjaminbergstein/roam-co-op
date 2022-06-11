@@ -25,7 +25,7 @@ const EventsOverlay = () => {
   const onlyMine =
     new URL(window.location.href).searchParams.get("mine") === "true";
 
-  const { api, authorized, isValidating, data: me } = useCurrentUser();
+  const { api, authorized, isValidating, data: me, shareId } = useCurrentUser();
   const email = me?.email;
   const { data: shares } = useSWR<Array<ShareType>>(
     email ? `${email}:shareLinks` : null,
@@ -129,7 +129,7 @@ const EventsOverlay = () => {
             </div>
             <div className="flex items-center gap-2 justify-between px-2 pt-4">
               <div className="text-xs text-sky-500 z-50 bg-white">
-                {authorized && !onlyMine && (
+                {!shareId && authorized && !onlyMine && (
                   <a
                     onClick={handleMineClicked}
                     href={`${url.pathname}?mine=true`}
@@ -138,7 +138,7 @@ const EventsOverlay = () => {
                     Only mine
                   </a>
                 )}
-                {authorized && onlyMine && (
+                {!shareId && authorized && onlyMine && (
                   <a
                     onClick={handleMineClicked}
                     href={`${url.pathname}?mine=false`}
